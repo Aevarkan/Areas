@@ -1,22 +1,12 @@
 /**
- * This file is part of Extended Commands Suite which is released under GPL-3.0.
+ * This file is part of Areas which is released under GPL-3.0.
  * See file LICENCE or go to https://www.gnu.org/licenses/gpl-3.0.en.html for full licence details.
  * File: main.ts
  * Author: Aevarkan
  */
 
-import "./scriptEvents"
-import "./rightClickDetection/rightClickDetection"
-import "./rightClickDetection/rightClickDetectionv2"
-import "./deathDetection/deathDetection"
-import "./entityLock"
-
-import "./lore/index"
-import "./scoreboardStatuses/index"
-import "./tagStatuses/index"
-
 import "./versionCounter"
 
 import { CURRENT_VERSION } from "constants"
 
-console.info(`§aExtended Commands Suite §b${CURRENT_VERSION}§a loaded.§r`)
+console.info(`§aAreas §b${CURRENT_VERSION}§a loaded.§r`)
