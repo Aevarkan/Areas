@@ -7,3 +7,8 @@
 
 // The python script will insert the version number
 export const CURRENT_VERSION = "v{{VERSION}}"
+
+// For your interest, constants are put here.
+// Changing these will break the addon however.
+
+export const DYNAMIC_PROPERTY_TIME_OFFSET = "time_offset"
