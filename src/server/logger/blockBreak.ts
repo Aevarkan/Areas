@@ -5,15 +5,26 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation, world } from "@minecraft/server";
-import { BlockInteractionTypes, Database } from "library/classes/BlockDatabase";
+import { DimensionLocation, GameMode, ItemComponentTypes, world } from "@minecraft/server";
+import { BlockInteractionTypes, Database } from "library/classes/Database";
 
 // We cannot use after events, this is because the block is already destroyed.
 // We're assuming all destruction means that block is now air.
 // (It is, we can always use the after event to confirm of course. No need to though)
 // We can't detect natural events
 
-world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
+world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player, itemStack}) => {
+
+    const creativeDestroy = itemStack.hasComponent("minecraft:can_destroy_in_creative")
+    // console.log(creativeDestroy)
+    const playerGamemode = player.getGameMode()
+
+    // It shouldn't log you hitting a sword on a block in creative!
+    // Doesn't work right now, wrong component
+    if (playerGamemode == GameMode.creative && creativeDestroy) return
+
+    // Add more logic for permissions later
+
     const location: DimensionLocation = {
         x: block.location.x,
         y: block.location.y,
@@ -21,20 +32,8 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
         dimension: dimension
     }
 
-    Database.addEntry(block, BlockInteractionTypes.BlockBroken, location, player)
+    Database.logBlockEvent(block, BlockInteractionTypes.BlockBroken, location, player)
 })
-
-// world.afterEvents.blockExplode.subscribe(({block, dimension, source}) => {
-//     const location: DimensionLocation = {
-//         x: block.location.x,
-//         y: block.location.y,
-//         z: block.location.z,
-//         dimension: dimension
-//     }
-
-//     Database.addEntry(block, BlockInteractionTypes.BlockBroken, location, source)
-// })
-
 
 world.beforeEvents.explosion.subscribe((event) => {
     const affectedBlocks = event.getImpactedBlocks()
@@ -48,6 +47,6 @@ world.beforeEvents.explosion.subscribe((event) => {
             dimension: block.dimension
         }
 
-        Database.addEntry(block, BlockInteractionTypes.BlockExploded, blockLocation, entity)
+        Database.logBlockEvent(block, BlockInteractionTypes.BlockExploded, blockLocation, entity)
     })
 })

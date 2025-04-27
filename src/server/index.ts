@@ -7,3 +7,4 @@
 
 import "./logger/blockBreak"
 import "./logger/blockPlace"
+import "./logger/entityDie"
