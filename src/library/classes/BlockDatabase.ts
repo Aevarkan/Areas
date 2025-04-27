@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { Block, DimensionLocation, Entity } from "@minecraft/server";
+import { Block, DimensionLocation, Entity, Player } from "@minecraft/server";
 
 /**
  * What can happen to a block, and how it happened.
@@ -34,7 +34,20 @@ class _Database {
      * @param entity The optional entity that was responsible for the interaction.
      */
     public addEntry(block: Block, interaction: BlockInteractionTypes, location: DimensionLocation, entity?: Entity) {
+        
+        // Debug
+        const blockTypeId = block.typeId
+        const locationStr = JSON.stringify(location)
+        const entityTypeId = entity.typeId
+        const entityId = entity.id
 
+        let entityName
+        if (entity instanceof Player) {
+            entityName = entity.name
+        }
+
+
+        console.log(blockTypeId, locationStr, interaction, entityTypeId, entityId, entityName)
     }
 }
 
