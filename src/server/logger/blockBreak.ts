@@ -5,35 +5,37 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation, GameMode, ItemComponentTypes, world } from "@minecraft/server";
+import { Block, DimensionLocation, system, Vector3, world } from "@minecraft/server";
 import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatabase";
+import { BlockSnapshot } from "library/classes/BlockSnapshot";
 
 // We cannot use after events, this is because the block is already destroyed.
 // We're assuming all destruction means that block is now air.
 // (It is, we can always use the after event to confirm of course. No need to though)
 // We can't detect natural events
 
-world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player, itemStack}) => {
+world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 
-    // const creativeDestroy = itemStack.hasComponent("minecraft:can_destroy_in_creative")
-    // console.log(creativeDestroy)
-    const creativeDestroy = false
-    const playerGamemode = player.getGameMode()
+    const blockSnapshot = new BlockSnapshot(block)
 
-    // It shouldn't log you hitting a sword on a block in creative!
-    // Doesn't work right now, wrong component
-    if (playerGamemode == GameMode.creative && creativeDestroy) return
-
-    // Add more logic for permissions later
-
-    const location: DimensionLocation = {
+    const location: Vector3 = {
         x: block.location.x,
         y: block.location.y,
-        z: block.location.z,
-        dimension: dimension
+        z: block.location.z
     }
 
-    BlockDatabase.logBlockEvent(block, BlockInteractionTypes.BlockBroken, location, player)
+    // We wait a tick to see if the block actually changes
+    // This makes it compatible with other addons that may cancel the block breaking (and creative mode swords!)
+    system.runTimeout(() => {
+        const newBlock = dimension.getBlock(location)
+        const newBlockTypeId = newBlock.typeId
+
+        // Don't log it if nothing changes
+        if (blockSnapshot.typeId == newBlockTypeId) return
+
+        BlockDatabase.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockBroken, player)
+
+    }, 1)
 })
 
 world.beforeEvents.explosion.subscribe((event) => {
@@ -41,13 +43,8 @@ world.beforeEvents.explosion.subscribe((event) => {
     const entity = event.source
 
     affectedBlocks.forEach(block => {
-        const blockLocation: DimensionLocation = {
-            x: block.location.x,
-            y: block.location.y,
-            z: block.location.z,
-            dimension: block.dimension
-        }
+        const blockSnapshot = new BlockSnapshot(block)
 
-        BlockDatabase.logBlockEvent(block, BlockInteractionTypes.BlockExploded, blockLocation, entity)
+        BlockDatabase.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
     })
 })

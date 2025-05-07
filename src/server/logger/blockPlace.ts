@@ -7,6 +7,7 @@
 
 import { DimensionLocation, world } from "@minecraft/server";
 import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatabase";
+import { BlockSnapshot } from "library/classes/BlockSnapshot";
 
 // We cannot use before events, this is because the block is already placed.
 // For rollback, we're assuming all blocks were placed on air.
@@ -20,13 +21,7 @@ import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatab
 // This will be much easier once the beforeEvent comes out of experimental
 // It saves the block that is there before the new block is placed
 
-world.afterEvents.playerPlaceBlock.subscribe(({block, player, dimension}) => {
-    const location: DimensionLocation = {
-        x: block.location.x,
-        y: block.location.y,
-        z: block.location.z,
-        dimension: dimension
-    }
-
-    BlockDatabase.logBlockEvent(block, BlockInteractionTypes.BlockPlaced, location, player)
+world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
+    const blockSnapshot = new BlockSnapshot(block)
+    BlockDatabase.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
 })

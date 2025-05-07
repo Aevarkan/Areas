@@ -6,6 +6,7 @@
  */
 
 import { Block } from "@minecraft/server";
+import { BlockSnapshot } from "./BlockSnapshot";
 
 const blocksWithNBT = [
     "minecraft:chest",
@@ -20,7 +21,7 @@ class BlockWrapper {
      * @param block The block to check.
      * @returns true if the block has NBT data, otherwise false
      */
-    public hasNBT(block: Block) {
+    public hasNBT(block: BlockSnapshot) {
         const blockTypeId = block.typeId
         let hasNBT = false
 

@@ -8,6 +8,7 @@
 import { Block, DimensionLocation, Entity, Player, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
 import { Name } from "./PlayerName";
+import { BlockSnapshot } from "./BlockSnapshot";
 
 /**
  * What can happen to a block, and how it happened.
@@ -49,7 +50,7 @@ class BlockEventDatabase {
      * @param location Where the interaction happened.
      * @param entity The optional entity that was responsible for the interaction.
      */
-    public logBlockEvent(block: Block, interaction: BlockInteractionTypes, location: DimensionLocation, entity?: Entity) {
+    public logBlockEvent(block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
         
         const time = Date.now()
         const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
@@ -80,7 +81,7 @@ class BlockEventDatabase {
      * @param entity The optional entity that caused the interaction.
      * @returns A key value pair of the event in string form.
      */
-    private serialiseBlockEvent(block: Block, interaction: BlockInteractionTypes, time: number, entity?: Entity) {
+    private serialiseBlockEvent(block: BlockSnapshot, interaction: BlockInteractionTypes, time: number, entity?: Entity) {
         // In the database, it should be saved as:
         // Key:
         // blockEvent.time.x.y.z.dimension
