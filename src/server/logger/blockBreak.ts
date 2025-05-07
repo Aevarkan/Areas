@@ -38,6 +38,9 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
     }, 1)
 })
 
+// There is a console error here when maces create explosions
+// I don't know how to fix that
+// It doesn't really matter, but it's very annoying
 world.beforeEvents.explosion.subscribe((event) => {
     const affectedBlocks = event.getImpactedBlocks()
     const entity = event.source

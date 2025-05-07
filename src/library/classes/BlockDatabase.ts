@@ -51,7 +51,7 @@ class BlockEventDatabase {
      * @param entity The optional entity that was responsible for the interaction.
      */
     public logBlockEvent(block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
-        
+
         const time = Date.now()
         const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
 
