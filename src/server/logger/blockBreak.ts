@@ -6,7 +6,7 @@
  */
 
 import { DimensionLocation, GameMode, ItemComponentTypes, world } from "@minecraft/server";
-import { BlockInteractionTypes, Database } from "library/classes/Database";
+import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatabase";
 
 // We cannot use after events, this is because the block is already destroyed.
 // We're assuming all destruction means that block is now air.
@@ -32,7 +32,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player, itemSt
         dimension: dimension
     }
 
-    Database.logBlockEvent(block, BlockInteractionTypes.BlockBroken, location, player)
+    BlockDatabase.logBlockEvent(block, BlockInteractionTypes.BlockBroken, location, player)
 })
 
 world.beforeEvents.explosion.subscribe((event) => {
@@ -47,6 +47,6 @@ world.beforeEvents.explosion.subscribe((event) => {
             dimension: block.dimension
         }
 
-        Database.logBlockEvent(block, BlockInteractionTypes.BlockExploded, blockLocation, entity)
+        BlockDatabase.logBlockEvent(block, BlockInteractionTypes.BlockExploded, blockLocation, entity)
     })
 })

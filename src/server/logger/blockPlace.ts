@@ -6,7 +6,7 @@
  */
 
 import { DimensionLocation, world } from "@minecraft/server";
-import { BlockInteractionTypes, Database } from "library/classes/Database";
+import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatabase";
 
 // We cannot use before events, this is because the block is already placed.
 // For rollback, we're assuming all blocks were placed on air.
@@ -28,5 +28,5 @@ world.afterEvents.playerPlaceBlock.subscribe(({block, player, dimension}) => {
         dimension: dimension
     }
 
-    Database.logBlockEvent(block, BlockInteractionTypes.BlockPlaced, location, player)
+    BlockDatabase.logBlockEvent(block, BlockInteractionTypes.BlockPlaced, location, player)
 })
