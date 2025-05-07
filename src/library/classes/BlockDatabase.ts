@@ -26,6 +26,12 @@ export enum EntityInteractionTypes {
     EntityStarve = "starved"
 }
 
+export enum EntityTypes {
+    None = "null",
+    NonPlayerEntity = "entity",
+    Player = "player"
+}
+
 class BlockEventDatabase {
 
     /**
@@ -48,6 +54,14 @@ class BlockEventDatabase {
         const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
 
         console.log(serialisedData.key, serialisedData.value)
+
+        // Unserialising for test
+        const unserialisedData = this.unserialiseBlockEventValue(serialisedData.value)
+        
+        console.log("Interaction type: ", unserialisedData.interaction)
+        console.log("NBT: ", unserialisedData.isNBT)
+        console.log("Entity type: ", unserialisedData.entityType)
+        console.log("Source Entity: ", unserialisedData.sourceEntityId)
     }
 
     /**
@@ -99,6 +113,40 @@ class BlockEventDatabase {
 
         return {key, value}
     }
+
+    /**
+     * Unserialises a stored block event value.
+     * @remarks This doesn't work for the key.
+     * @param value 
+     */
+    private unserialiseBlockEventValue(value: string) {
+        const parts = value.split(",")
+        
+        const interaction = parts[0] as BlockInteractionTypes // This is certain due to how its saved
+        const blockTypeId = parts[1]
+        const isNBTString = parts[2]
+        const structureId = parts[3]
+        const sourceEntityId = parts[4]
+
+        const isNBT = isNBTString === "1" ? true : false
+
+        let entityType: EntityTypes
+        if (sourceEntityId === "null") {
+            entityType = EntityTypes.None
+        } else if (this.isId(sourceEntityId)) {
+            entityType = EntityTypes.Player
+        } else {
+            entityType = EntityTypes.NonPlayerEntity
+        }
+
+        return {interaction, blockTypeId, isNBT, structureId, sourceEntityId, entityType}
+    }
+
+    private isId(string: string): boolean {
+        const regex = /^-?\d+$/
+        return regex.test(string)
+    }
+    
 
     /**
      * Special case of logging a block event where this is the first time it is recorded in the database.

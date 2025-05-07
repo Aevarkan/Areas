@@ -15,8 +15,9 @@ import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatab
 
 world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player, itemStack}) => {
 
-    const creativeDestroy = itemStack.hasComponent("minecraft:can_destroy_in_creative")
+    // const creativeDestroy = itemStack.hasComponent("minecraft:can_destroy_in_creative")
     // console.log(creativeDestroy)
+    const creativeDestroy = false
     const playerGamemode = player.getGameMode()
 
     // It shouldn't log you hitting a sword on a block in creative!
