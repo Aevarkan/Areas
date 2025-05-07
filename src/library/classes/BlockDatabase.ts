@@ -44,7 +44,10 @@ class BlockEventDatabase {
      */
     public logBlockEvent(block: Block, interaction: BlockInteractionTypes, location: DimensionLocation, entity?: Entity) {
         
+        const time = Date.now()
+        const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
 
+        console.log(serialisedData.key, serialisedData.value)
     }
 
     /**
