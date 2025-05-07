@@ -7,6 +7,7 @@
 
 import { Block, DimensionLocation, Entity, Player, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
+import { Name } from "./PlayerName";
 
 /**
  * What can happen to a block, and how it happened.
@@ -57,11 +58,18 @@ class BlockEventDatabase {
 
         // Unserialising for test
         const unserialisedData = this.unserialiseBlockEventValue(serialisedData.value)
-        
+        const entityType = unserialisedData.entityType
+
         console.log("Interaction type: ", unserialisedData.interaction)
         console.log("NBT: ", unserialisedData.isNBT)
-        console.log("Entity type: ", unserialisedData.entityType)
+        console.log("Entity type: ", entityType)
         console.log("Source Entity: ", unserialisedData.sourceEntityId)
+
+        if (entityType == EntityTypes.Player) {
+            const playerId = unserialisedData.sourceEntityId
+            const playerName = Name.getPlayerName(playerId)
+            console.log("Player Name: ", playerName)
+        }
     }
 
     /**
