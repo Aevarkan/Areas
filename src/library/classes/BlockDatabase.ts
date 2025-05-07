@@ -1,11 +1,12 @@
 /**
  * This file is part of Areas which is released under GPL-3.0.
  * See file LICENCE or go to https://www.gnu.org/licenses/gpl-3.0.en.html for full licence details.
- * File: Database.ts
+ * File: BlockDatabase.ts
  * Author: Aevarkan
  */
 
 import { Block, DimensionLocation, Entity, Player, world } from "@minecraft/server";
+import { BlockData } from "./BlockWrapper";
 
 /**
  * What can happen to a block, and how it happened.
@@ -25,7 +26,7 @@ export enum EntityInteractionTypes {
     EntityStarve = "starved"
 }
 
-class _Database {
+class BlockEventDatabase {
 
     /**
      * Gets all the logs for a specific location.
@@ -43,20 +44,65 @@ class _Database {
      */
     public logBlockEvent(block: Block, interaction: BlockInteractionTypes, location: DimensionLocation, entity?: Entity) {
         
-        // Debug
-        const blockTypeId = block.typeId
-        const locationStr = JSON.stringify(location)
-        const entityTypeId = entity.typeId
-        const entityId = entity.id
 
-        let entityName = "none"
-        if (entity instanceof Player) {
-            entityName = entity.name
+    }
+
+    /**
+     * Serialises a block event into a compact string.
+     * @param block The block that was effected.
+     * @param interaction What happened to the block.
+     * @param time Unix time of the block event.
+     * @param entity The optional entity that caused the interaction.
+     * @returns A key value pair of the event in string form.
+     */
+    private serialiseBlockEvent(block: Block, interaction: BlockInteractionTypes, time: number, entity?: Entity) {
+        // In the database, it should be saved as:
+        // Key:
+        // blockEvent.time.x.y.z.dimension
+        // Value:
+        // interaction,blockTypeId,isNBT?,structureId(if it's an nbt, otherwise "null"),sourceEntityId(Use a number if player)
+
+        // Key
+        // * blockEvent is the prefix
+        // * time is given as an argument
+        const blockX = block.location.x
+        const blockY = block.location.y
+        const blockZ = block.location.z
+        const blockDimension = block.dimension.id
+
+        // Must all be strings
+        const key = `blockEvent.${time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
+
+        // Value
+        // * interaction is given as an arguement
+        const blockTypeId = block.typeId
+
+        // Implement NBT checking later
+        const isNBT = BlockData.hasNBT(block)
+        const structureId = "null"
+        const isNBTString = isNBT === true ? "1" : "0"
+
+        // Use the type id if an entity, otherwise uses the id for a player
+        // "null" if no source entity
+        let sourceEntityId = "null"
+        if (!(entity instanceof Player)) {
+            sourceEntityId = entity.typeId
+        } else {
+            sourceEntityId = entity.id
         }
 
+        // Must all be strings
+        const value = `${interaction},${blockTypeId},${isNBTString},${structureId},${sourceEntityId}`
 
-        console.log(blockTypeId, locationStr, interaction, entityTypeId, entityId, entityName)
-        // world.sendMessage(blockTypeId + locationStr + interaction + entityTypeId + entityId + entityName)
+        return {key, value}
+    }
+
+    /**
+     * Special case of logging a block event where this is the first time it is recorded in the database.
+     * @remarks This doesn't need a timestamp.
+     */
+    public initialiseBlock() {
+
     }
 
     /**
@@ -100,4 +146,4 @@ class _Database {
     }
 }
 
-export const Database = new _Database()
+export const BlockDatabase = new BlockEventDatabase()
