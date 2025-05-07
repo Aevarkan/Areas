@@ -17,7 +17,7 @@ export enum BlockInteractionTypes {
     BlockBroken = "broken",
     BlockExploded = "exploded",
     BlockPlaced = "placed",
-
+    BlockInitialise = "init",
 }
 
 /**
@@ -158,11 +158,18 @@ class BlockEventDatabase {
     
 
     /**
-     * Special case of logging a block event where this is the first time it is recorded in the database.
+     * Special case of logging a block where this is the first time it is recorded in the database.
      * @remarks This doesn't need a timestamp.
      */
-    public initialiseBlock() {
+    public initialiseBlock(block: BlockSnapshot) {
+        const interactionType = BlockInteractionTypes.BlockInitialise
+        const time = 0 // 1st Jan 1970
 
+        const serialisedBlockEvent = this.serialiseBlockEvent(block, interactionType, time)
+        const key = serialisedBlockEvent.key
+        const value = serialisedBlockEvent.value
+
+        world.setDynamicProperty(key, value)
     }
 
     /**
