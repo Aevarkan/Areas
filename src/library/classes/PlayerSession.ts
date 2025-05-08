@@ -7,7 +7,7 @@
 
 import { DimensionLocation, Player } from "@minecraft/server";
 import config from "config";
-import { BlockRecordQueryOptions } from "library/definitions/query";
+import { BlockRecordQueryOptions, TimeQueryOptions } from "library/definitions/query";
 
 const IS_INSPECTOR_ENABLED_DP = "inspector"
 
@@ -63,8 +63,12 @@ export class PlayerSession {
      * Gets the player's block query options.
      */
     public getBlockQueryOptions(): BlockRecordQueryOptions {
-        
-        let queryOptions: BlockRecordQueryOptions
+
+        const queryOptions: BlockRecordQueryOptions = {
+            timeOptions: undefined,
+            entityOptions: undefined,
+            interaction: undefined
+        }
 
         return queryOptions
     }
