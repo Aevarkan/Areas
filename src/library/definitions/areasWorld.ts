@@ -9,10 +9,10 @@
  * What can happen to a block, and how it happened.
  */
 export enum BlockInteractionTypes {
-    BlockBroken = "broken",
-    BlockExploded = "exploded",
-    BlockPlaced = "placed",
-    BlockInitialise = "init",
+    BlockBroken = "0",
+    BlockExploded = "1",
+    BlockPlaced = "2",
+    BlockInitialise = "3",
 }
 
 /**
@@ -26,8 +26,15 @@ export enum EntityInteractionTypes {
 /**
  * Different types of entities stored in the Areas database.
  */
-export enum AreasEntityTypes {
+export enum DatabaseEntityTypes {
     None = "null",
     NonPlayerEntity = "entity",
     Player = "player"
+}
+
+/**
+ * Types of database value, only has null for now
+ */
+export enum DatabaseValue {
+    NULL = "0"
 }
