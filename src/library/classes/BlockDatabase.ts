@@ -54,6 +54,10 @@ export class BlockDatabase {
         // }
     }
 
+    public removeLoggedEvent(time: number, location: DimensionLocation) {
+
+    }
+
     /**
      * Serialises a block event into a compact string.
      * @param block The block that was effected.
@@ -67,15 +71,33 @@ export class BlockDatabase {
         // Key:
         // blockEvent.time.x.y.z.dimension
         // Value:
-        // interaction,blockTypeId,isNBT?,structureId(if it's an nbt, otherwise "null"),sourceEntityId(Use a number if player)
+        // interaction,blockTypeId,isNBT?,structureId(if it's an nbt, otherwise null),sourceEntityId(Use a number if player)
 
-        // Key
-        // * blockEvent is the prefix
-        // * time is given as an argument
-        const blockX = block.location.x
-        const blockY = block.location.y
-        const blockZ = block.location.z
-        const blockDimension = block.dimension.id
+        const blockLocation: DimensionLocation = {
+            x: block.location.x,
+            y: block.location.y,
+            z: block.location.z,
+            dimension: block.dimension,
+        }
+
+        const key = this.serialiseKey(time, blockLocation)
+        const value = this.serialiseValue(block, interaction, entity)
+
+        return {key, value}
+    }
+
+    /**
+     * Serialises the key for the block event.
+     * @param time The unix time of the block event.
+     * @param blockLocation The location of the block.
+     * @returns The key in string form.
+     */
+    private serialiseKey(time: number, blockLocation: DimensionLocation): string {
+
+        const blockX = blockLocation.x
+        const blockY = blockLocation.y
+        const blockZ = blockLocation.z
+        const blockDimension = blockLocation.dimension.id
 
         if (
             BLOCK_EVENT_PREFIX.includes(".") ||
@@ -91,7 +113,17 @@ export class BlockDatabase {
 
         // Must all be strings
         const key = `${BLOCK_EVENT_PREFIX}.${time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
+        return key
+    }
 
+    /**
+     * Serialises the value for the block event.
+     * @param block The block's snapshot {@link BlockSnapshot}
+     * @param interaction The type of interaction that caused this event.
+     * @param entity The optional entity that caused the event.
+     * @returns The value in string form.
+     */
+    private serialiseValue(block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
         // Value
         // * interaction is given as an arguement
         const blockTypeId = block.typeId
@@ -104,13 +136,15 @@ export class BlockDatabase {
         // Use the type id if an entity, otherwise uses the id for a player
         // "null" if no source entity
         let sourceEntityId = DatabaseValue.NULL as string
-        if (!(entity instanceof Player)) {
-            // An entity is stored with type id
-            sourceEntityId = entity.typeId
-        }
-        // A player will just be stored as numeric id
-        else {
-            sourceEntityId = entity.id
+        if (entity) {
+            if (!(entity instanceof Player)) {
+                // An entity is stored with type id
+                sourceEntityId = entity.typeId
+            }
+            // A player will just be stored as numeric id
+            else {
+                sourceEntityId = entity.id
+            }
         }
 
         if (
@@ -126,8 +160,7 @@ export class BlockDatabase {
 
         // Must all be strings
         const value = `${interaction},${blockTypeId},${isNBTString},${structureId},${sourceEntityId}`
-
-        return {key, value}
+        return value
     }
 
     /**
