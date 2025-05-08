@@ -5,6 +5,7 @@
  * Author: Aevarkan
  */
 
+import { world } from "@minecraft/server";
 import { BlockDatabase } from "./BlockDatabase";
 import { EntityDatabase } from "./EntityDatabase";
 
@@ -27,6 +28,22 @@ class AreasDatabase {
     constructor() {
         this.Entity = new EntityDatabase()
         this.Block = new BlockDatabase()
+    }
+
+    /**
+     * Gets the total storage usage of the database
+     * @returns The number of bytes the database uses.
+     */
+    public getStorageUsage(): number {
+        const byteCount = world.getDynamicPropertyTotalByteCount()
+        return byteCount
+    }
+
+    /**
+     * Clears the entire database.
+     */
+    public clearDatabase() {
+        world.clearDynamicProperties()
     }
 
 }
