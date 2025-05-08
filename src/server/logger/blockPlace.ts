@@ -26,6 +26,7 @@ import { BlockInteractionTypes } from "library/definitions/areasWorld";
 world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
 
     // Don't log if the player is in inspector mode
+    // Inspector mode doesn't allow block placement anyway
     const session = new PlayerSession(player)
     if (session.isInspectorEnabled) return
 
