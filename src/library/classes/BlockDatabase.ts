@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { Dimension, DimensionLocation, Entity, EntityTypes, Player, world } from "@minecraft/server";
+import { DimensionLocation, Entity, Player, system, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { DatabaseEntityTypes, BlockInteractionTypes, DatabaseValue } from "library/definitions/areasWorld";
@@ -90,6 +90,7 @@ export class BlockDatabase {
             blockZ.toString().includes(".") ||
             blockDimension.toString().includes(".")
         ) {
+            system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer. Full stop found."))
             throw new DatabaseInvalidCharacterError('Invalid character "." found in key.')
         }
 
@@ -124,6 +125,7 @@ export class BlockDatabase {
             structureId.includes(",") ||
             sourceEntityId.includes(",")
         ) {
+            system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer. Comma found."))
             throw new DatabaseInvalidCharacterError('Invalid character "," found in value.')
         }
 
