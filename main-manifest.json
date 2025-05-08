@@ -44,7 +44,7 @@
     "bp_dependencies": [
         {
             "module_name": "@minecraft/server",
-            "version": "1.18.0"
+            "version": "2.0.0-beta"
         },
         {
             "module_name": "@minecraft/server-ui",
