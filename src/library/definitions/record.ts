@@ -6,7 +6,7 @@
  */
 
 import { DimensionLocation } from "@minecraft/server";
-import { AreasEntityTypes, BlockInteractionTypes } from "./areasWorld";
+import { BlockInteractionTypes, DatabaseEntityTypes } from "./areasWorld";
 
 export interface BlockEventRecordValue {
     /**
@@ -17,7 +17,7 @@ export interface BlockEventRecordValue {
     typeId: string,
     isNBT: boolean,
     structureId?: string,
-    causeEntityType: AreasEntityTypes,
+    causeEntityType: DatabaseEntityTypes,
     causeEntityTypeId?: string,
     causePlayerId?: number
 }
@@ -60,7 +60,7 @@ export interface BlockEventRecord {
      * @remarks
      * The entity that caused this record to be made.
      */
-    causeEntityType: AreasEntityTypes,
+    causeEntityType: DatabaseEntityTypes,
     /**
      * @remarks
      * The type id of the entity that caused this record to be made.

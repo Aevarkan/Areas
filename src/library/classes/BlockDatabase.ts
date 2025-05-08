@@ -14,6 +14,7 @@ import { BlockRecordQueryOptions } from "library/definitions/query";
 import { DatabaseKeyRecord } from "library/definitions/key";
 import { Utility } from "./Utility";
 import { BlockEventRecord, BlockEventRecordValue } from "library/definitions/record";
+import { DatabaseInvalidCharacterError } from "./Errors";
 
 const BLOCK_EVENT_PREFIX = "blockEvent"
 
@@ -81,6 +82,17 @@ export class BlockDatabase {
         const blockZ = block.location.z
         const blockDimension = block.dimension.id
 
+        if (
+            BLOCK_EVENT_PREFIX.includes(".") ||
+            time.toString().includes(".") ||
+            blockX.toString().includes(".") ||
+            blockY.toString().includes(".") ||
+            blockZ.toString().includes(".") ||
+            blockDimension.toString().includes(".")
+        ) {
+            throw new DatabaseInvalidCharacterError('Invalid character "." found in key.')
+        }
+
         // Must all be strings
         const key = `${BLOCK_EVENT_PREFIX}.${time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
 
@@ -91,7 +103,7 @@ export class BlockDatabase {
         // Implement NBT checking later
         const isNBT = BlockData.hasNBT(block)
         const structureId = DatabaseValue.NULL
-        const isNBTString = isNBT === true ? "1" : "0"
+        const isNBTString = isNBT === true ? DatabaseValue.True : DatabaseValue.NULL
 
         // Use the type id if an entity, otherwise uses the id for a player
         // "null" if no source entity
@@ -103,6 +115,16 @@ export class BlockDatabase {
         // A player will just be stored as numeric id
         else {
             sourceEntityId = entity.id
+        }
+
+        if (
+            interaction.includes(",") ||
+            blockTypeId.includes(",") ||
+            isNBTString.includes(",") ||
+            structureId.includes(",") ||
+            sourceEntityId.includes(",")
+        ) {
+            throw new DatabaseInvalidCharacterError('Invalid character "," found in value.')
         }
 
         // Must all be strings
@@ -125,7 +147,7 @@ export class BlockDatabase {
         const structureId = parts[3]
         const sourceEntityId = parts[4]
 
-        const isNBT = isNBTString === "1" ? true : false
+        const isNBT = isNBTString === DatabaseValue.True ? true : false
 
         let entityType: DatabaseEntityTypes
         // These are set as undefined, then changed

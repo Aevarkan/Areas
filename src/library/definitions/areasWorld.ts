@@ -9,10 +9,11 @@
  * What can happen to a block, and how it happened.
  */
 export enum BlockInteractionTypes {
-    BlockBroken = "0",
-    BlockExploded = "1",
-    BlockPlaced = "2",
-    BlockInitialise = "3",
+    NULL = "0",
+    BlockBroken = "1",
+    BlockExploded = "2",
+    BlockPlaced = "3",
+    BlockInitialise = "4",
 }
 
 /**
@@ -33,8 +34,9 @@ export enum DatabaseEntityTypes {
 }
 
 /**
- * Types of database value, only has null for now
+ * Default database values
  */
 export enum DatabaseValue {
-    NULL = "0"
+    NULL = "0",
+    True = "1"
 }
