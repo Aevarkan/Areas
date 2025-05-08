@@ -24,5 +24,6 @@ import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
     const blockSnapshot = new BlockSnapshot(block)
-    Database.Block.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
+    const time = Date.now()
+    Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
 })

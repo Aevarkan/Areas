@@ -30,7 +30,7 @@ export class PlayerNameDatabase {
      * @returns The player's last seen name.
      * @remarks Useful for offline players!
      */
-    public getPlayerName(playerId: string): string {
+    public getPlayerName(playerId: number): string {
         const key = `nameRecord.${playerId}`
 
         const playerName = world.getDynamicProperty(key) as string

@@ -13,6 +13,7 @@ import { Database } from "./AreasDatabase";
 import { BlockRecordQueryOptions } from "library/definitions/query";
 import { DatabaseKeyRecord } from "library/definitions/key";
 import { Utility } from "./Utility";
+import { BlockEventRecord, BlockEventRecordValue } from "library/definitions/record";
 
 const BLOCK_EVENT_PREFIX = "blockEvent"
 
@@ -27,29 +28,31 @@ export class BlockDatabase {
 
     /**
      * Logs an block event (e.g. Broken block) to the database.
+     * @param time The unix time of this event happening.
      * @param block The block affected by the interaction.
      * @param interaction The type of interaction.
      * @param location Where the interaction happened.
      * @param entity The optional entity that was responsible for the interaction.
      */
-    public logBlockEvent(block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
+    public logBlockEvent(time: number, block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
 
-        const time = Date.now()
+        // We cannot get the time here, this is not good practice (what if the logging takes a while?)
+        // const time = Date.now()
         const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
 
         console.log(serialisedData.key, serialisedData.value)
 
         // Unserialising for test
-        const unserialisedData = this.unserialiseBlockEventValue(serialisedData.value)
-        const entityType = unserialisedData.entityType
+        const unserialisedData = this.unserialiseBlockEventRecord(serialisedData.value)
+        const entityType = unserialisedData.causeEntityType
 
         console.log("Interaction type: ", unserialisedData.interaction)
         console.log("NBT: ", unserialisedData.isNBT)
         console.log("Entity type: ", entityType)
-        console.log("Source Entity: ", unserialisedData.sourceEntityId)
+        console.log("Source Entity: ", unserialisedData.causeEntityId)
 
         if (entityType == AreasEntityTypes.Player) {
-            const playerId = unserialisedData.sourceEntityId
+            const playerId = unserialisedData.causePlayerId
             const playerName = Database.Names.getPlayerName(playerId)
             console.log("Player Name: ", playerName)
         }
@@ -110,7 +113,7 @@ export class BlockDatabase {
      * @remarks This doesn't work for the key.
      * @param value 
      */
-    private unserialiseBlockEventValue(value: string) {
+    private unserialiseBlockEventRecord(value: string) {
         const parts = value.split(",")
         
         const interaction = parts[0] as BlockInteractionTypes // This is certain due to how its saved
@@ -122,15 +125,31 @@ export class BlockDatabase {
         const isNBT = isNBTString === "1" ? true : false
 
         let entityType: AreasEntityTypes
+        // These are set as undefined, then changed
+        let causeEntityId = undefined
+        let causePlayerId = undefined
         if (sourceEntityId === "null") {
             entityType = AreasEntityTypes.None
         } else if (this.isId(sourceEntityId)) {
             entityType = AreasEntityTypes.Player
+            causePlayerId = sourceEntityId
         } else {
             entityType = AreasEntityTypes.NonPlayerEntity
+            causeEntityId = sourceEntityId
         }
 
-        return {interaction, blockTypeId, isNBT, structureId, sourceEntityId, entityType}
+        const blockRecordValue: BlockEventRecordValue = {
+            id: value,
+            interaction: interaction,
+            typeId: blockTypeId,
+            isNBT: isNBT,
+            causeEntityType: entityType,
+            structureId: isNBT ? structureId : undefined,
+            causeEntityId: causeEntityId,
+            causePlayerId: causePlayerId
+        }
+
+        return blockRecordValue
     }
 
     /**
@@ -149,9 +168,11 @@ export class BlockDatabase {
      * @remarks This doesn't need a timestamp.
      */
     public initialiseBlock(block: BlockSnapshot) {
+        // We use the special initialise interaction and set the time to 0
         const interactionType = BlockInteractionTypes.BlockInitialise
         const time = 0 // 1st Jan 1970
 
+        // Everything else is the same
         const serialisedBlockEvent = this.serialiseBlockEvent(block, interactionType, time)
         const key = serialisedBlockEvent.key
         const value = serialisedBlockEvent.value
@@ -175,11 +196,26 @@ export class BlockDatabase {
         // Filter by options (only time for keys)
         const queryMatchingKeys = locationMatchingKeys.filter(key => this.isKeyMatchingBlockQuery(key, queryOptions))
 
-        const blockRecords = []
+        // This is all the filtering we can do with the keys, so now we need the record
+        const blockRecords = [] as BlockEventRecord[]
         queryMatchingKeys.forEach(key => {
             const value = world.getDynamicProperty(key.id) as string
-            blockRecords.push(value)
-            // TODO: Combine key into a single readable object
+            const blockRecordValue = this.unserialiseBlockEventRecord(value)
+
+            // Combine data from the key to get the full record
+            const blockRecord: BlockEventRecord = {
+                time: key.time,
+                location: key.location,
+                causeEntityType: blockRecordValue.causeEntityType,
+                interaction: blockRecordValue.interaction,
+                isNBT: blockRecordValue.isNBT,
+                typeId: blockRecordValue.typeId,
+                causeEntityId: blockRecordValue.causeEntityId,
+                causePlayerId: blockRecordValue.causePlayerId,
+                structureId: blockRecordValue.structureId
+            }
+
+            blockRecords.push(blockRecord)
         })
     }
 

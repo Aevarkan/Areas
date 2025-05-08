@@ -17,6 +17,7 @@ import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 
+    const time = Date.now()
     const blockSnapshot = new BlockSnapshot(block)
 
     const location: Vector3 = {
@@ -27,6 +28,8 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 
     // We wait a tick to see if the block actually changes
     // This makes it compatible with other addons that may cancel the block breaking (and creative mode swords!)
+    // TODO: This will not work for NBT blocks, as then the structure will not be saved!
+    // Save the structure, then delete it if the block is still there.
     system.runTimeout(() => {
         const newBlock = dimension.getBlock(location)
         const newBlockTypeId = newBlock.typeId
@@ -34,7 +37,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
         // Don't log it if nothing changes
         if (blockSnapshot.typeId == newBlockTypeId) return
 
-        Database.Block.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockBroken, player)
+        Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockBroken, player)
 
     }, 1)
 })
@@ -43,12 +46,13 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 // I don't know how to fix that
 // It doesn't really matter, but it's very annoying
 world.beforeEvents.explosion.subscribe((event) => {
+    const time = Date.now()
     const affectedBlocks = event.getImpactedBlocks()
     const entity = event.source
 
     affectedBlocks.forEach(block => {
         const blockSnapshot = new BlockSnapshot(block)
 
-        Database.Block.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
+        Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
     })
 })
