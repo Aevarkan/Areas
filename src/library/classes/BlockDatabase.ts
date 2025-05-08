@@ -128,11 +128,16 @@ export class BlockDatabase {
         return {interaction, blockTypeId, isNBT, structureId, sourceEntityId, entityType}
     }
 
+    /**
+     * Checks if a string is a type id or entity id.
+     * @param string The id to check.
+     * @returns true if an entity id, otherwise false
+     * @remarks Type ids are typically stored as namespace:id, entity ids are purely numbers.
+     */
     private isId(string: string): boolean {
         const regex = /^-?\d+$/
         return regex.test(string)
     }
-    
 
     /**
      * Special case of logging a block where this is the first time it is recorded in the database.
