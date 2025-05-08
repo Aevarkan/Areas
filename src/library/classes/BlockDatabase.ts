@@ -33,23 +33,26 @@ export class BlockDatabase {
         // We cannot get the time here, this is not good practice (what if the logging takes a while?)
         // const time = Date.now()
         const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
+        world.setDynamicProperty(serialisedData.key, serialisedData.value)
 
-        console.log(serialisedData.key, serialisedData.value)
+        // Simply code from when I was testing
+        // ###############################
+        // console.log(serialisedData.key, serialisedData.value)
 
         // Unserialising for test
-        const unserialisedData = this.unserialiseBlockEventRecord(serialisedData.value)
-        const entityType = unserialisedData.causeEntityType
+        // const unserialisedData = this.unserialiseBlockEventRecord(serialisedData.value)
+        // const entityType = unserialisedData.causeEntityType
 
-        console.log("Interaction type: ", unserialisedData.interaction)
-        console.log("NBT: ", unserialisedData.isNBT)
-        console.log("Entity type: ", entityType)
-        console.log("Source Entity: ", unserialisedData.causeEntityTypeId)
+        // console.log("Interaction type: ", unserialisedData.interaction)
+        // console.log("NBT: ", unserialisedData.isNBT)
+        // console.log("Entity type: ", entityType)
+        // console.log("Source Entity: ", unserialisedData.causeEntityTypeId)
 
-        if (entityType == DatabaseEntityTypes.Player) {
-            const playerId = unserialisedData.causePlayerId
-            const playerName = Database.Names.getPlayerName(playerId)
-            console.log("Player Name: ", playerName)
-        }
+        // if (entityType == DatabaseEntityTypes.Player) {
+        //     const playerId = unserialisedData.causePlayerId
+        //     const playerName = Database.Names.getPlayerName(playerId)
+        //     console.log("Player Name: ", playerName)
+        // }
     }
 
     /**
