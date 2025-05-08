@@ -5,8 +5,9 @@
  * Author: Aevarkan
  */
 
-import { Player } from "@minecraft/server";
+import { DimensionLocation, Player } from "@minecraft/server";
 import config from "config";
+import { BlockRecordQueryOptions } from "library/definitions/query";
 
 const IS_INSPECTOR_ENABLED_DP = "inspector"
 
@@ -37,6 +38,9 @@ export class PlayerSession {
         if (config.OperatorTag && player.hasTag(config.OperatorTag)) {
             this.isOperator = true
         }
+
+        // DEBUG
+        this.isInspectorEnabled = true
     }
 
     /**
@@ -53,5 +57,24 @@ export class PlayerSession {
     public disableInspector() {
         this.isInspectorEnabled = false
         this.player.setDynamicProperty(IS_INSPECTOR_ENABLED_DP, false)
+    }
+
+    /**
+     * Gets the player's block query options.
+     */
+    public getBlockQueryOptions(): BlockRecordQueryOptions {
+        
+        let queryOptions: BlockRecordQueryOptions
+
+        return queryOptions
+    }
+
+    /**
+     * Checks if a player has permission to place a block here.
+     * @param location The location to check.
+     * @remarks This doesn't check for inspector mode.
+     */
+    public hasPlacePermission(location: DimensionLocation) {
+
     }
 }
