@@ -6,9 +6,9 @@
  */
 
 import { world } from "@minecraft/server";
-import { Name } from "library/classes/PlayerName";
+import { Database } from "library/classes/AreasDatabase";
 
 // Grabs a player's name when they spawn in
 world.afterEvents.playerSpawn.subscribe(event => {
-    Name.savePlayerRecord(event.player)
+    Database.Names.savePlayerRecord(event.player)
 })
