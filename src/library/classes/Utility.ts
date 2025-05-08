@@ -6,6 +6,38 @@
  */
 
 import { DimensionLocation } from "@minecraft/server";
+import { BlockEventRecord } from "library/definitions/record";
+import { BlockSnapshot } from "./BlockSnapshot";
+import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
+
+const blocksWithNBT = [
+    MinecraftBlockTypes.Chest,
+
+    // Furnaces
+    MinecraftBlockTypes.Furnace,
+    MinecraftBlockTypes.LitFurnace,
+    MinecraftBlockTypes.BlastFurnace,
+    MinecraftBlockTypes.LitBlastFurnace,
+
+    // Shulker Boxes
+    MinecraftBlockTypes.BlackShulkerBox,
+    MinecraftBlockTypes.BlueShulkerBox,
+    MinecraftBlockTypes.BrownShulkerBox,
+    MinecraftBlockTypes.CyanShulkerBox,
+    MinecraftBlockTypes.GrayShulkerBox,
+    MinecraftBlockTypes.GreenShulkerBox,
+    MinecraftBlockTypes.LightBlueShulkerBox,
+    MinecraftBlockTypes.LightGrayShulkerBox,
+    MinecraftBlockTypes.LimeShulkerBox,
+    MinecraftBlockTypes.MagentaShulkerBox,
+    MinecraftBlockTypes.OrangeShulkerBox,
+    MinecraftBlockTypes.PinkShulkerBox,
+    MinecraftBlockTypes.PurpleShulkerBox,
+    MinecraftBlockTypes.RedShulkerBox,
+    MinecraftBlockTypes.UndyedShulkerBox,
+    MinecraftBlockTypes.WhiteShulkerBox,
+    MinecraftBlockTypes.YellowShulkerBox
+] as string[]
 
 class UtilityFunctions {
     
@@ -37,6 +69,32 @@ class UtilityFunctions {
     public isId(string: string): boolean {
         const regex = /^-?\d+$/
         return regex.test(string)
+    }
+
+    /**
+     * Parses a block event into a readable string.
+     * @param record The block event record.
+     * @param includeLocation Whether the string should contain the block location.
+     */
+    public parseBlockRecord(record: BlockEventRecord, includeLocation: boolean) {
+        // Records should be something like
+        // At time, player broke block:type
+        
+    }
+
+    /**
+     * Checks if a block has NBT data.
+     * @param block The block to check.
+     * @returns true if the block has NBT data, otherwise false
+     */
+    public hasNBT(block: BlockSnapshot) {
+        const blockTypeId = block.typeId
+        let hasNBT = false
+
+        if (blocksWithNBT.includes(blockTypeId)) {
+            hasNBT = true
+        }
+        return  hasNBT
     }
 }
 

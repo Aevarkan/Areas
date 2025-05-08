@@ -4,7 +4,8 @@
   },
   "dependencies": {
     "@minecraft/server": "2.0.0-beta.1.21.80-stable",
-    "@minecraft/server-ui": "1.3.0"
+    "@minecraft/server-ui": "1.3.0",
+    "@minecraft/vanilla-data": "1.21.80"
   },
   "devDependencies": {
     "typescript": "^5.8.2"

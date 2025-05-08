@@ -6,7 +6,6 @@
  */
 
 import { DimensionLocation, Entity, Player, system, world } from "@minecraft/server";
-import { BlockData } from "./BlockWrapper";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { DatabaseEntityTypes, BlockInteractionTypes, DatabaseValue } from "library/definitions/areasWorld";
 import { BlockRecordQueryOptions } from "library/definitions/query";
@@ -135,7 +134,7 @@ export class BlockDatabase {
         const blockTypeId = block.typeId
 
         // Implement NBT checking later
-        const isNBT = BlockData.hasNBT(block)
+        const isNBT = Utility.hasNBT(block)
         const structureId = DatabaseValue.NULL
         const isNBTString = isNBT === true ? DatabaseValue.True : DatabaseValue.NULL
 
@@ -411,7 +410,7 @@ export class BlockDatabase {
         if (query.timeOptions) {
             const queryTime = query.timeOptions.time
             const isQueryBefore = query.timeOptions.queryBefore
-            
+
             // We're querying before, so if the key's time is after (greater), it doesn't match
             if (isQueryBefore) {
 
