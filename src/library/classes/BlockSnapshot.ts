@@ -18,6 +18,9 @@ export class BlockSnapshot {
     readonly isAir: boolean
     readonly isLiquid: boolean
     readonly isWaterlogged: boolean
+    readonly x: number
+    readonly y: number
+    readonly z: number
 
     constructor(block: Block) {
         this.dimension = block.dimension
@@ -26,5 +29,8 @@ export class BlockSnapshot {
         this.isAir = block.isAir
         this.isLiquid = block.isLiquid
         this.isWaterlogged = block.isWaterlogged
+        this.x = block.x
+        this.y = block.y
+        this.z = block.z
     }
 }

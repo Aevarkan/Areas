@@ -214,10 +214,40 @@ export class BlockDatabase {
     }
 
     /**
+     * Safely initialises a block, preventing overwrites.
+     * @param block The block snapshot to initialise.
+     */
+    public safelyInitialiseBlock(block: BlockSnapshot) {
+        const isInitialised = this.isBlockInitialised(block)
+        if (!isInitialised) {
+            this.initialiseBlock(block)
+        }
+    }
+
+    /**
+     * Checks if a block is initialised or not.
+     * @returns true if initiliased, otherwise false.
+     */
+    private isBlockInitialised(blockLocation: DimensionLocation) {
+        const time = 0 // Initialisation uses time 0
+        const key = this.serialiseKey(time, blockLocation)
+
+        const recordKey = world.getDynamicProperty(key)
+
+        // If there's a key, then it's initialised
+        let initialised = false
+        if (recordKey) {
+            initialised = true
+        }
+        return initialised
+    }
+
+    /**
      * Special case of logging a block where this is the first time it is recorded in the database.
+     * @param block The block's snapshot.
      * @remarks This doesn't need a timestamp.
      */
-    public initialiseBlock(block: BlockSnapshot) {
+    private initialiseBlock(block: BlockSnapshot) {
         // We use the special initialise interaction and set the time to 0
         const interactionType = BlockInteractionTypes.BlockInitialise
         const time = 0 // 1st Jan 1970

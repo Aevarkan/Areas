@@ -37,6 +37,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
     // const item = block.getItemStack()
     // const struct = world.structureManager.createFromWorld()
 
+    Database.Block.safelyInitialiseBlock(blockSnapshot)
     Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockBroken, player)
 
     // We wait a tick to see if the block actually changes
@@ -60,11 +61,31 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 world.beforeEvents.explosion.subscribe((event) => {
     const time = Date.now()
     const affectedBlocks = event.getImpactedBlocks()
+    const dimension = event.dimension
     const entity = event.source
 
+    const blockSnapshots = [] as BlockSnapshot[]
     affectedBlocks.forEach(block => {
         const blockSnapshot = new BlockSnapshot(block)
+        blockSnapshots.push(blockSnapshot)
 
+        Database.Block.safelyInitialiseBlock(blockSnapshot)
         Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
     })
+
+    // Check if the explosion caused any damage 1 tick later
+    system.runTimeout(() => {
+        blockSnapshots.forEach(blockSnapshot => {
+
+            const newBlock = dimension.getBlock(blockSnapshot)
+            const newBlockTypeId = newBlock.typeId
+    
+            // Remove the log if nothing happens
+            if (blockSnapshot.typeId === newBlockTypeId) {
+                Database.Block.removeLoggedEvent(time, blockSnapshot)
+            }
+    
+        })
+
+    }, 1)
 })

@@ -26,6 +26,7 @@ import { BlockInteractionTypes } from "library/definitions/areasWorld";
 world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
 
     // Don't log if the player is in inspector mode
+    // This shouldn't even trigger as its an after event
     // Inspector mode doesn't allow block placement anyway
     const session = new PlayerSession(player)
     if (session.isInspectorEnabled) return
@@ -33,4 +34,15 @@ world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
     const blockSnapshot = new BlockSnapshot(block)
     const time = Date.now()
     Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
+})
+
+// Checks if a block is initialised, if not, then initialise
+world.beforeEvents.playerBreakBlock.subscribe(event => {
+
+    // Don't log if the player is in inspector mode
+    const session = new PlayerSession(event.player)
+    if (session.isInspectorEnabled) return
+
+    const block = event.block
+    Database.Block.safelyInitialiseBlock(block)
 })
