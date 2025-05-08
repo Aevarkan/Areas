@@ -54,8 +54,14 @@ export class BlockDatabase {
         // }
     }
 
+    /**
+     * Removes a logged blockevent from the database.
+     * @param time The time of this blockevent happening.
+     * @param location The location of the blockevent.
+     */
     public removeLoggedEvent(time: number, location: DimensionLocation) {
-
+        const key = this.serialiseKey(time, location)
+        world.setDynamicProperty(key, undefined)
     }
 
     /**
