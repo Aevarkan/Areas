@@ -49,7 +49,7 @@ export class BlockDatabase {
         console.log("Interaction type: ", unserialisedData.interaction)
         console.log("NBT: ", unserialisedData.isNBT)
         console.log("Entity type: ", entityType)
-        console.log("Source Entity: ", unserialisedData.causeEntityId)
+        console.log("Source Entity: ", unserialisedData.causeEntityTypeId)
 
         if (entityType == AreasEntityTypes.Player) {
             const playerId = unserialisedData.causePlayerId
@@ -97,8 +97,11 @@ export class BlockDatabase {
         // "null" if no source entity
         let sourceEntityId = "null"
         if (!(entity instanceof Player)) {
+            // An entity is stored with type id
             sourceEntityId = entity.typeId
-        } else {
+        }
+        // A player will just be stored as numeric id
+        else {
             sourceEntityId = entity.id
         }
 
@@ -126,7 +129,7 @@ export class BlockDatabase {
 
         let entityType: AreasEntityTypes
         // These are set as undefined, then changed
-        let causeEntityId = undefined
+        let causeEntityTypeId = undefined
         let causePlayerId = undefined
         if (sourceEntityId === "null") {
             entityType = AreasEntityTypes.None
@@ -135,7 +138,7 @@ export class BlockDatabase {
             causePlayerId = sourceEntityId
         } else {
             entityType = AreasEntityTypes.NonPlayerEntity
-            causeEntityId = sourceEntityId
+            causeEntityTypeId = sourceEntityId
         }
 
         const blockRecordValue: BlockEventRecordValue = {
@@ -145,7 +148,7 @@ export class BlockDatabase {
             isNBT: isNBT,
             causeEntityType: entityType,
             structureId: isNBT ? structureId : undefined,
-            causeEntityId: causeEntityId,
+            causeEntityTypeId: causeEntityTypeId,
             causePlayerId: causePlayerId
         }
 
@@ -210,13 +213,70 @@ export class BlockDatabase {
                 interaction: blockRecordValue.interaction,
                 isNBT: blockRecordValue.isNBT,
                 typeId: blockRecordValue.typeId,
-                causeEntityId: blockRecordValue.causeEntityId,
+                causeEntityTypeId: blockRecordValue.causeEntityTypeId,
                 causePlayerId: blockRecordValue.causePlayerId,
                 structureId: blockRecordValue.structureId
             }
 
             blockRecords.push(blockRecord)
         })
+    }
+
+    /**
+     * Checks if a record matches the query.
+     * @param record The record.
+     * @param query The record query.
+     * @returns true if it matches, otherwise false
+     */
+    private isRecordMatchingQuery(record: BlockEventRecord, query: BlockRecordQueryOptions) {
+        // We assume it matches, and try to find a contradiction.
+        let isMatching = true
+
+        // Check if the time matches (This is done already when we check the key, but putting it here anyway)
+        if (query.timeOptions) {
+
+            // We're querying before, so if the key's time is after (greater), it doesn't match
+            if (query.timeOptions.queryBefore) {
+
+                if (record.time >= query.timeOptions.time) {
+                    isMatching = false
+                }
+            }
+
+            // Vice versa
+            else {
+                if (record.time <= query.timeOptions.time) {
+                    isMatching = false
+                }
+            }
+        }
+
+        // Check for the interaction type (cause)
+        if (query.interaction) {
+            if (query.interaction !== record.interaction) {
+                isMatching = false
+            }
+        }
+
+        // Now check for entities (including players)
+        if (query.entityOptions) {
+            const filterEntityType = query.entityOptions.entityType
+            if (filterEntityType === AreasEntityTypes.NonPlayerEntity) {
+                const filterEntityTypeId = query.entityOptions.entityTypeId
+                if (filterEntityTypeId !== record.causeEntityTypeId) {
+                    isMatching = false
+                }
+
+            } else if (filterEntityType === AreasEntityTypes.Player) {
+                const filterPlayerId = query.entityOptions.playerId
+                if (filterPlayerId !== record.causePlayerId) {
+                    isMatching = false
+                }
+            }
+
+        }
+
+        return isMatching
     }
 
     /**

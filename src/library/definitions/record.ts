@@ -18,7 +18,7 @@ export interface BlockEventRecordValue {
     isNBT: boolean,
     structureId?: string,
     causeEntityType: AreasEntityTypes,
-    causeEntityId?: string,
+    causeEntityTypeId?: string,
     causePlayerId?: number
 }
 
@@ -65,7 +65,7 @@ export interface BlockEventRecord {
      * @remarks
      * The type id of the entity that caused this record to be made.
      */
-    causeEntityId?: string,
+    causeEntityTypeId?: string,
     /**
      * @remarks
      * The player id that caused this record to be made.

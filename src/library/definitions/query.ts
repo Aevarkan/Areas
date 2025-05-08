@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { BlockInteractionTypes, EntityInteractionTypes } from "./areasWorld"
+import { AreasEntityTypes, BlockInteractionTypes, EntityInteractionTypes } from "./areasWorld"
 
 export enum RecordQueryKind {
     Entity = "entity",
@@ -33,9 +33,9 @@ interface BaseRecordQueryOptions {
 export interface EntityRecordQueryOptions extends BaseRecordQueryOptions {
     kind: RecordQueryKind.Entity
     /**
-     * The cause for the record to filter.
+     * The interaction type for the record to filter by.
      */
-    cause?: EntityInteractionTypes
+    interaction?: EntityInteractionTypes
 }
 
 /**
@@ -44,9 +44,9 @@ export interface EntityRecordQueryOptions extends BaseRecordQueryOptions {
 export interface BlockRecordQueryOptions extends BaseRecordQueryOptions {
     kind: RecordQueryKind.Block
     /**
-     * The cause for the record to filter.
+     * The interaction type for the record to filter by.
      */
-    cause?: BlockInteractionTypes
+    interaction?: BlockInteractionTypes
 }
 
 export interface TimeQueryOptions {
@@ -62,9 +62,13 @@ export interface TimeQueryOptions {
 
 export interface EntityQueryOptions {
     /**
-     * The entity type to filter.
+     * The entity type id to filter.
      */
     entityTypeId: string
+    /**
+     * The entity type id to filter.
+     */
+    entityType: AreasEntityTypes
     /**
      * The optional player id to filter by.
      */
