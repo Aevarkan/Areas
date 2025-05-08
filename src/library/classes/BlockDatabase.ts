@@ -5,34 +5,11 @@
  * Author: Aevarkan
  */
 
-import { Block, DimensionLocation, Entity, Player, world } from "@minecraft/server";
+import { DimensionLocation, Entity, EntityTypes, Player, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
 import { Name } from "./PlayerName";
 import { BlockSnapshot } from "./BlockSnapshot";
-
-/**
- * What can happen to a block, and how it happened.
- */
-export enum BlockInteractionTypes {
-    BlockBroken = "broken",
-    BlockExploded = "exploded",
-    BlockPlaced = "placed",
-    BlockInitialise = "init",
-}
-
-/**
- * What can happen to an entity, and how it happened.
- */
-export enum EntityInteractionTypes {
-    EntitySlain = "killed",
-    EntityStarve = "starved"
-}
-
-export enum EntityTypes {
-    None = "null",
-    NonPlayerEntity = "entity",
-    Player = "player"
-}
+import { AreasEntityTypes, BlockInteractionTypes } from "library/definitions/areasWorld";
 
 class BlockEventDatabase {
 
@@ -66,7 +43,7 @@ class BlockEventDatabase {
         console.log("Entity type: ", entityType)
         console.log("Source Entity: ", unserialisedData.sourceEntityId)
 
-        if (entityType == EntityTypes.Player) {
+        if (entityType == AreasEntityTypes.Player) {
             const playerId = unserialisedData.sourceEntityId
             const playerName = Name.getPlayerName(playerId)
             console.log("Player Name: ", playerName)
@@ -139,13 +116,13 @@ class BlockEventDatabase {
 
         const isNBT = isNBTString === "1" ? true : false
 
-        let entityType: EntityTypes
+        let entityType: AreasEntityTypes
         if (sourceEntityId === "null") {
-            entityType = EntityTypes.None
+            entityType = AreasEntityTypes.None
         } else if (this.isId(sourceEntityId)) {
-            entityType = EntityTypes.Player
+            entityType = AreasEntityTypes.Player
         } else {
-            entityType = EntityTypes.NonPlayerEntity
+            entityType = AreasEntityTypes.NonPlayerEntity
         }
 
         return {interaction, blockTypeId, isNBT, structureId, sourceEntityId, entityType}
@@ -172,45 +149,6 @@ class BlockEventDatabase {
         world.setDynamicProperty(key, value)
     }
 
-    /**
-     * Logs an entity event (e.g. Entity dies) to the database.
-     * @param entity The entity effected by the interaction.
-     * @param interaction The type of interaction.
-     * @param sourceEntity The optional entity that caused the interaction.
-     */
-    public logEntityEvent(entity: Entity, interaction: EntityInteractionTypes, sourceEntity?: Entity) {
-
-
-        // Debug
-        // const entityId = entity.id
-        let entityTypeId = entity.typeId
-        // const sourceEntityId = sourceEntity.id
-        let sourceEntityTypeId = sourceEntity.typeId
-        const dimensionLocation: DimensionLocation = {
-            x: Math.floor(entity.location.x),
-            y: Math.floor(entity.location.y),
-            z: Math.floor(entity.location.z),
-            dimension: entity.dimension
-        }
-
-        
-
-        const locationStr = JSON.stringify(dimensionLocation)
-
-        let entityName = "none"
-        if (entity instanceof Player) {
-            entityName = entity.name
-            entityTypeId = entity.id
-        }
-
-        let sourceEntityName = "none"
-        if (sourceEntity instanceof Player) {
-            sourceEntityName = sourceEntity.name
-            sourceEntityTypeId = sourceEntity.id
-        }
-
-        console.log(entityTypeId, entityName, locationStr, interaction, sourceEntityTypeId, sourceEntityName)
-    }
 }
 
 export const BlockDatabase = new BlockEventDatabase()
