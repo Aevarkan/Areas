@@ -160,6 +160,7 @@ export class BlockDatabase {
      * @param string The id to check.
      * @returns true if an entity id, otherwise false
      * @remarks Type ids are typically stored as namespace:id, entity ids are purely numbers.
+     * @remarks Areas stores entities with type ids and players with numeric ids.
      */
     private isId(string: string): boolean {
         const regex = /^-?\d+$/
@@ -220,6 +221,9 @@ export class BlockDatabase {
 
             blockRecords.push(blockRecord)
         })
+
+        const filteredRecords = blockRecords.filter(record => this.isRecordMatchingQuery(record, queryOptions))
+        return filteredRecords
     }
 
     /**
