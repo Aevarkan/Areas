@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { AreasEntityTypes, BlockInteractionTypes, EntityInteractionTypes } from "./areasWorld"
+import { BlockInteractionTypes, DatabaseEntityTypes, EntityInteractionTypes } from "./areasWorld"
 
 export enum RecordQueryKind {
     Entity = "entity",
@@ -68,7 +68,7 @@ export interface EntityQueryOptions {
     /**
      * The entity type id to filter.
      */
-    entityType: AreasEntityTypes
+    entityType: DatabaseEntityTypes
     /**
      * The optional player id to filter by.
      */
