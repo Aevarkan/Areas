@@ -7,11 +7,6 @@
 
 import { BlockInteractionTypes, DatabaseEntityTypes, EntityInteractionTypes } from "./areasWorld"
 
-export enum RecordQueryKind {
-    Entity = "entity",
-    Block = "block"
-}
-
 /**
  * Options on querying a database record.
  * @remarks abstract interface
@@ -31,7 +26,6 @@ interface BaseRecordQueryOptions {
  * Options on querying an entity database record.
  */
 export interface EntityRecordQueryOptions extends BaseRecordQueryOptions {
-    kind: RecordQueryKind.Entity
     /**
      * The interaction type for the record to filter by.
      */
@@ -42,7 +36,6 @@ export interface EntityRecordQueryOptions extends BaseRecordQueryOptions {
  * Options on querying a block database record.
  */
 export interface BlockRecordQueryOptions extends BaseRecordQueryOptions {
-    kind: RecordQueryKind.Block
     /**
      * The interaction type for the record to filter by.
      */
