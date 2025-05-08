@@ -9,6 +9,11 @@ import { world } from "@minecraft/server";
 import { CURRENT_VERSION } from "constants";
 
 // Future proofing
-const previousVersion = world.getDynamicProperty("areas_version") as string
+let previousVersion = undefined
+world.afterEvents.worldLoad.subscribe(() => {
+    previousVersion = world.getDynamicProperty("areas_version") as string
 
-world.setDynamicProperty("areas_version", CURRENT_VERSION)
+    world.setDynamicProperty("areas_version", CURRENT_VERSION)
+})
+
+
