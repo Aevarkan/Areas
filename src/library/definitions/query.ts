@@ -20,11 +20,11 @@ interface BaseRecordQueryOptions {
     /**
      * Options on filtering the records by time.
      */
-    time?: TimeQueryOptions
+    timeOptions?: TimeQueryOptions
     /**
      * Options on filtering the records by entity.
      */
-    entity?: EntityQueryOptions
+    entityOptions?: EntityQueryOptions
 }
 
 /**

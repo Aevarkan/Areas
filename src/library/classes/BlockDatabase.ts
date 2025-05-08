@@ -5,11 +5,16 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation, Entity, EntityTypes, Player, world } from "@minecraft/server";
+import { Dimension, DimensionLocation, Entity, EntityTypes, Player, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { AreasEntityTypes, BlockInteractionTypes } from "library/definitions/areasWorld";
 import { Database } from "./AreasDatabase";
+import { BlockRecordQueryOptions } from "library/definitions/query";
+import { DatabaseKeyRecord } from "library/definitions/key";
+import { Utility } from "./Utility";
+
+const BLOCK_EVENT_PREFIX = "blockEvent"
 
 export class BlockDatabase {
 
@@ -74,7 +79,7 @@ export class BlockDatabase {
         const blockDimension = block.dimension.id
 
         // Must all be strings
-        const key = `blockEvent.${time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
+        const key = `${BLOCK_EVENT_PREFIX}.${time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
 
         // Value
         // * interaction is given as an arguement
@@ -154,8 +159,121 @@ export class BlockDatabase {
         world.setDynamicProperty(key, value)
     }
 
-    public getBlockRecord(blockLocation: DimensionLocation) {
+    /**
+     * Gets the blockevent records for a single block location.
+     * @param blockLocation The {@link DimensionLocation} to check.
+     * @param queryOptions Options on what to filter by.
+     */
+    public getBlockRecord(blockLocation: DimensionLocation, queryOptions: BlockRecordQueryOptions) {
+        const blockRecordKeys = this.getBlockRecordKeys()
 
+        const keyObjects = this.unserialiseBlockRecordKeys(blockRecordKeys)
+
+        // Filter by the location
+        const locationMatchingKeys = keyObjects.filter(key => Utility.isMatchingLocation(key.location, blockLocation))
+
+        // Filter by options (only time for keys)
+        const queryMatchingKeys = locationMatchingKeys.filter(key => this.isKeyMatchingBlockQuery(key, queryOptions))
+
+        const blockRecords = []
+        queryMatchingKeys.forEach(key => {
+            const value = world.getDynamicProperty(key.id) as string
+            blockRecords.push(value)
+            // TODO: Combine key into a single readable object
+        })
+    }
+
+    /**
+     * Checks if a record key matches the query.
+     * @param key The key.
+     * @param query The record query.
+     * @returns true if it matches, otherwise false
+     */
+    private isKeyMatchingBlockQuery(key: DatabaseKeyRecord, query: BlockRecordQueryOptions) {
+        const queryTime = query.timeOptions.time
+        const isQueryBefore = query.timeOptions.queryBefore
+        const keyTime = key.time
+
+        // We assume it matches, and test if it doesn't
+        let isMatching = true
+
+        // We only check if the query specifies a time
+        if (query.timeOptions) {
+
+            // We're querying before, so if the key's time is after (greater), it doesn't match
+            if (isQueryBefore) {
+
+                if (keyTime >= queryTime) {
+                    isMatching = false
+                }
+            }
+
+            // Vice versa
+            else {
+                if (keyTime <= queryTime) {
+                    isMatching = false
+                }
+            }
+        }
+
+        return isMatching
+    }
+
+    /**
+     * Gets only the block record keys from the database.
+     * @returns A string array of the record keys.
+     * @remarks The keys will include the prefix.
+     */
+    private getBlockRecordKeys(): string[] {
+        const allKeys = world.getDynamicPropertyIds()
+        const filteredKeys = allKeys.filter(key => key.startsWith(BLOCK_EVENT_PREFIX))
+        return filteredKeys
+    }
+
+    /**
+     * Unserialises an array of block record keys.
+     * @param key The key array.
+     */
+    private unserialiseBlockRecordKeys(keys: string[]) {
+        const unserialisedKeys = [] as DatabaseKeyRecord[]
+
+        keys.forEach(key => {
+            const keyInfo = this.unserialiseBlockRecordKey(key)
+            unserialisedKeys.push(keyInfo)
+        })
+        return unserialisedKeys
+    }
+
+    /**
+     * Unserialises a block record key.
+     * @param key The key.
+     */
+    private unserialiseBlockRecordKey(key: string): DatabaseKeyRecord {
+        const parts = key.split(".")
+
+        // parts[0] is the prefix
+        const time = parseInt(parts[1])
+        const blockX = parseInt(parts[2])
+        const blockY = parseInt(parts[3])
+        const blockZ = parseInt(parts[4])
+        const blockDimensionString = parts[5]
+
+        const blockDimension = world.getDimension(blockDimensionString)
+
+        const blockLocation: DimensionLocation = {
+            x: blockX,
+            y: blockY,
+            z: blockZ,
+            dimension: blockDimension
+        }
+
+        const keyRecord: DatabaseKeyRecord = {
+            id: key,
+            time: time,
+            location: blockLocation
+        }
+
+        return keyRecord
     }
 
 }
