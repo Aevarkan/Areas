@@ -5,9 +5,10 @@
  * Author: Aevarkan
  */
 
-import { system, Vector3, world } from "@minecraft/server";
+import { Block, DimensionLocation, system, Vector3, world } from "@minecraft/server";
 import { Database } from "library/classes/AreasDatabase";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
+import { PlayerSession } from "library/classes/PlayerSession";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 // We cannot use after events, this is because the block is already destroyed.
@@ -17,27 +18,37 @@ import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 
+    // Don't log if the player is in inspector mode
+    const session = new PlayerSession(player)
+    if (session.isInspectorEnabled) return
+
     const time = Date.now()
     const blockSnapshot = new BlockSnapshot(block)
 
-    const location: Vector3 = {
+    const blockLocation: DimensionLocation = {
         x: block.location.x,
         y: block.location.y,
-        z: block.location.z
+        z: block.location.z,
+        dimension: dimension
     }
 
+    // world.structureManager.createFromWorld
+    // const item = block.getItemStack()
+    // const struct = world.structureManager.createFromWorld()
+
+    Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockBroken, player)
+
     // We wait a tick to see if the block actually changes
-    // This makes it compatible with other addons that may cancel the block breaking (and creative mode swords!)
-    // TODO: This will not work for NBT blocks, as then the structure will not be saved!
-    // Save the structure, then delete it if the block is still there.
+    // If the block is still there, then remove the entry
+    // This will be useful for later when we save NBT blocks
     system.runTimeout(() => {
-        const newBlock = dimension.getBlock(location)
+        const newBlock = dimension.getBlock(blockLocation)
         const newBlockTypeId = newBlock.typeId
 
-        // Don't log it if nothing changes
-        if (blockSnapshot.typeId == newBlockTypeId) return
-
-        Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockBroken, player)
+        // Remove the log if nothing happens
+        if (blockSnapshot.typeId === newBlockTypeId) {
+            Database.Block.removeLoggedEvent(time, blockLocation)
+        }
 
     }, 1)
 })
