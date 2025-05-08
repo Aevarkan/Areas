@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { Block, BlockPermutation, BlockType, Dimension, Vector3 } from "@minecraft/server";
+import { Block, Dimension, Vector3 } from "@minecraft/server";
 
 /**
  * Represents a block at the time it's created instead of passing by reference.

@@ -5,7 +5,6 @@
  * Author: Aevarkan
  */
 
-import { Block } from "@minecraft/server";
 import { BlockSnapshot } from "./BlockSnapshot";
 
 const blocksWithNBT = [

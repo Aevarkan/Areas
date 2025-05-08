@@ -21,13 +21,6 @@ const BLOCK_EVENT_PREFIX = "blockEvent"
 export class BlockDatabase {
 
     /**
-     * Gets all the logs for a specific location.
-     */
-    public getLocationHistory(location: DimensionLocation) {
-
-    }
-
-    /**
      * Logs an block event (e.g. Broken block) to the database.
      * @param time The unix time of this event happening.
      * @param block The block affected by the interaction.
