@@ -9,7 +9,6 @@ import { DimensionLocation, Entity, Player, system, world } from "@minecraft/ser
 import { BlockData } from "./BlockWrapper";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { DatabaseEntityTypes, BlockInteractionTypes, DatabaseValue } from "library/definitions/areasWorld";
-import { Database } from "./AreasDatabase";
 import { BlockRecordQueryOptions } from "library/definitions/query";
 import { DatabaseKeyRecord } from "library/definitions/key";
 import { Utility } from "./Utility";
@@ -153,7 +152,7 @@ export class BlockDatabase {
         let causePlayerId = undefined
         if (sourceEntityId === DatabaseValue.NULL) {
             entityType = DatabaseEntityTypes.None
-        } else if (this.isId(sourceEntityId)) {
+        } else if (Utility.isId(sourceEntityId)) {
             entityType = DatabaseEntityTypes.Player
             causePlayerId = sourceEntityId
         } else {
@@ -173,18 +172,6 @@ export class BlockDatabase {
         }
 
         return blockRecordValue
-    }
-
-    /**
-     * Checks if a string is a type id or entity id.
-     * @param string The id to check.
-     * @returns true if an entity id, otherwise false
-     * @remarks Type ids are typically stored as namespace:id, entity ids are purely numbers.
-     * @remarks Areas stores entities with type ids and players with numeric ids.
-     */
-    private isId(string: string): boolean {
-        const regex = /^-?\d+$/
-        return regex.test(string)
     }
 
     /**

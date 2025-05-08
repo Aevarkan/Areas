@@ -23,8 +23,20 @@ class UtilityFunctions {
         ) {
             isMatching = true
         }
-        
+
         return isMatching
+    }
+
+    /**
+     * Checks if a string is a type id or entity id.
+     * @param string The id to check.
+     * @returns true if an entity id, otherwise false
+     * @remarks Type ids are typically stored as namespace:id, entity ids are purely numbers.
+     * @remarks Areas stores entities with type ids and players with numeric ids.
+     */
+    public isId(string: string): boolean {
+        const regex = /^-?\d+$/
+        return regex.test(string)
     }
 }
 
