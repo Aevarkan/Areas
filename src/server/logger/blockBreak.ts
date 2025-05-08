@@ -6,7 +6,7 @@
  */
 
 import { system, Vector3, world } from "@minecraft/server";
-import { BlockDatabase } from "library/classes/BlockDatabase";
+import { Database } from "library/classes/AreasDatabase";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
@@ -34,7 +34,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
         // Don't log it if nothing changes
         if (blockSnapshot.typeId == newBlockTypeId) return
 
-        BlockDatabase.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockBroken, player)
+        Database.Block.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockBroken, player)
 
     }, 1)
 })
@@ -49,6 +49,6 @@ world.beforeEvents.explosion.subscribe((event) => {
     affectedBlocks.forEach(block => {
         const blockSnapshot = new BlockSnapshot(block)
 
-        BlockDatabase.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
+        Database.Block.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
     })
 })

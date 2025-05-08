@@ -6,7 +6,7 @@
  */
 
 import { world } from "@minecraft/server";
-import { EntityDatabase } from "library/classes/EntityDatabase";
+import { Database } from "library/classes/AreasDatabase";
 import { EntityInteractionTypes } from "library/definitions/areasWorld";
 
 world.afterEvents.entityDie.subscribe((event) => {
@@ -14,5 +14,5 @@ world.afterEvents.entityDie.subscribe((event) => {
     const cause = event.damageSource.cause
     const sourceEntity = event.damageSource.damagingEntity
 
-    EntityDatabase.logEntityEvent(entity, EntityInteractionTypes.EntitySlain, sourceEntity)
+    Database.Entity.logEntityEvent(entity, EntityInteractionTypes.EntitySlain, sourceEntity)
 })

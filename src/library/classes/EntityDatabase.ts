@@ -8,7 +8,7 @@
 import { DimensionLocation, Entity, Player } from "@minecraft/server"
 import { EntityInteractionTypes } from "library/definitions/areasWorld"
 
-class EntityEventDatabase {
+export class EntityDatabase {
 
     /**
      * Logs an entity event (e.g. Entity dies) to the database.
@@ -17,7 +17,6 @@ class EntityEventDatabase {
      * @param sourceEntity The optional entity that caused the interaction.
      */
     public logEntityEvent(entity: Entity, interaction: EntityInteractionTypes, sourceEntity?: Entity) {
-
 
         // Debug
         // const entityId = entity.id
@@ -30,8 +29,6 @@ class EntityEventDatabase {
             z: Math.floor(entity.location.z),
             dimension: entity.dimension
         }
-
-        
 
         const locationStr = JSON.stringify(dimensionLocation)
 
@@ -50,5 +47,3 @@ class EntityEventDatabase {
         console.log(entityTypeId, entityName, locationStr, interaction, sourceEntityTypeId, sourceEntityName)
     }
 }
-
-export const EntityDatabase = new EntityEventDatabase()

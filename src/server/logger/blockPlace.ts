@@ -5,9 +5,10 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation, world } from "@minecraft/server";
-import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatabase";
+import { world } from "@minecraft/server";
+import { Database } from "library/classes/AreasDatabase";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
+import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 // We cannot use before events, this is because the block is already placed.
 // For rollback, we're assuming all blocks were placed on air.
@@ -23,5 +24,5 @@ import { BlockSnapshot } from "library/classes/BlockSnapshot";
 
 world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
     const blockSnapshot = new BlockSnapshot(block)
-    BlockDatabase.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
+    Database.Block.logBlockEvent(blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
 })

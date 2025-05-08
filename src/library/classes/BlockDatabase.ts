@@ -11,7 +11,7 @@ import { Name } from "./PlayerName";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { AreasEntityTypes, BlockInteractionTypes } from "library/definitions/areasWorld";
 
-class BlockEventDatabase {
+export class BlockDatabase {
 
     /**
      * Gets all the logs for a specific location.
@@ -150,5 +150,3 @@ class BlockEventDatabase {
     }
 
 }
-
-export const BlockDatabase = new BlockEventDatabase()
