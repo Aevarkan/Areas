@@ -402,8 +402,6 @@ export class BlockDatabase {
      * @returns true if it matches, otherwise false
      */
     private isKeyMatchingBlockQuery(key: DatabaseKeyRecord, query: BlockRecordQueryOptions) {
-        const queryTime = query.timeOptions.time
-        const isQueryBefore = query.timeOptions.queryBefore
         const keyTime = key.time
 
         // We assume it matches, and test if it doesn't
@@ -411,7 +409,9 @@ export class BlockDatabase {
 
         // We only check if the query specifies a time
         if (query.timeOptions) {
-
+            const queryTime = query.timeOptions.time
+            const isQueryBefore = query.timeOptions.queryBefore
+            
             // We're querying before, so if the key's time is after (greater), it doesn't match
             if (isQueryBefore) {
 
