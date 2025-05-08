@@ -5,9 +5,10 @@
  * Author: Aevarkan
  */
 
-import { Block, DimensionLocation, system, Vector3, world } from "@minecraft/server";
-import { BlockDatabase, BlockInteractionTypes } from "library/classes/BlockDatabase";
+import { system, Vector3, world } from "@minecraft/server";
+import { BlockDatabase } from "library/classes/BlockDatabase";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
+import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 // We cannot use after events, this is because the block is already destroyed.
 // We're assuming all destruction means that block is now air.
