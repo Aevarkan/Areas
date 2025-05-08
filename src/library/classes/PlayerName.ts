@@ -11,7 +11,7 @@ export class PlayerNameDatabase {
 
     /**
      * Saves a players name and id for viewing later.
-     * @param player 
+     * @param player The player to save.
      */
     public savePlayerRecord(player: Player) {
         const playerId = player.id
