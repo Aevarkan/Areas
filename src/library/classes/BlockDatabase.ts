@@ -7,9 +7,9 @@
 
 import { DimensionLocation, Entity, EntityTypes, Player, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
-import { Name } from "./PlayerName";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { AreasEntityTypes, BlockInteractionTypes } from "library/definitions/areasWorld";
+import { Database } from "./AreasDatabase";
 
 export class BlockDatabase {
 
@@ -45,7 +45,7 @@ export class BlockDatabase {
 
         if (entityType == AreasEntityTypes.Player) {
             const playerId = unserialisedData.sourceEntityId
-            const playerName = Name.getPlayerName(playerId)
+            const playerName = Database.Names.getPlayerName(playerId)
             console.log("Player Name: ", playerName)
         }
     }
@@ -152,6 +152,10 @@ export class BlockDatabase {
         const value = serialisedBlockEvent.value
 
         world.setDynamicProperty(key, value)
+    }
+
+    public getBlockRecord(blockLocation: DimensionLocation) {
+
     }
 
 }

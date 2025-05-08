@@ -7,7 +7,7 @@
 
 import { Player, world } from "@minecraft/server";
 
-class PlayerName {
+export class PlayerNameDatabase {
 
     /**
      * Saves a players name and id for viewing later.
@@ -50,5 +50,3 @@ class PlayerName {
         return playerId
     }
 }
-
-export const Name = new PlayerName()

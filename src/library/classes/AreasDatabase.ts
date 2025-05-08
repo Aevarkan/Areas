@@ -8,6 +8,7 @@
 import { world } from "@minecraft/server";
 import { BlockDatabase } from "./BlockDatabase";
 import { EntityDatabase } from "./EntityDatabase";
+import { PlayerNameDatabase } from "./PlayerName";
 
 /**
  * General class for database handling.
@@ -24,10 +25,15 @@ class AreasDatabase {
      * {@link BlockDatabase}
      */
     Block: BlockDatabase
+    /**
+     * The player name database.
+     */
+    Names: PlayerNameDatabase
 
     constructor() {
         this.Entity = new EntityDatabase()
         this.Block = new BlockDatabase()
+        this.Names = new PlayerNameDatabase()
     }
 
     /**
