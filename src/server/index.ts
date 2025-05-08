@@ -8,5 +8,4 @@
 import "./logger/blockBreak"
 import "./logger/blockPlace"
 import "./logger/entityDie"
-
-import "./misc/playerName"
+import "./logger/playerName"
