@@ -209,13 +209,49 @@ export class BlockDatabase {
     }
 
     /**
+     * Gets the blockevent records for the whole world.
+     * @param queryOptions Options on what to filter by.
+     */
+    public getBlockRecords(queryOptions?: BlockRecordQueryOptions): BlockEventRecord[] {
+        const blockRecordKeyStrings = this.getBlockRecordKeys()
+        const blockRecordKeys = this.unserialiseBlockRecordKeys(blockRecordKeyStrings)
+
+        // Filter by options (only time for keys)
+        const queryMatchingKeys = blockRecordKeys.filter(key => this.isKeyMatchingBlockQuery(key, queryOptions))
+
+        // Now get the record
+        const blockRecords = [] as BlockEventRecord[]
+        queryMatchingKeys.forEach(key => {
+            const value = world.getDynamicProperty(key.id) as string
+            const blockRecordValue = this.unserialiseBlockEventRecord(value)
+
+            // Combine data from the key to get the full record
+            const blockRecord: BlockEventRecord = {
+                time: key.time,
+                location: key.location,
+                causeEntityType: blockRecordValue.causeEntityType,
+                interaction: blockRecordValue.interaction,
+                isNBT: blockRecordValue.isNBT,
+                typeId: blockRecordValue.typeId,
+                causeEntityTypeId: blockRecordValue.causeEntityTypeId,
+                causePlayerId: blockRecordValue.causePlayerId,
+                structureId: blockRecordValue.structureId
+            }
+
+            blockRecords.push(blockRecord)
+        })
+
+        const filteredRecords = blockRecords.filter(record => this.isRecordMatchingQuery(record, queryOptions))
+        return filteredRecords
+    }
+
+    /**
      * Gets the blockevent records for a single block location.
      * @param blockLocation The {@link DimensionLocation} to check.
      * @param queryOptions Options on what to filter by.
      */
-    public getBlockRecord(blockLocation: DimensionLocation, queryOptions: BlockRecordQueryOptions) {
+    public getBlockRecord(blockLocation: DimensionLocation, queryOptions: BlockRecordQueryOptions): BlockEventRecord[] {
         const blockRecordKeys = this.getBlockRecordKeys()
-
         const keyObjects = this.unserialiseBlockRecordKeys(blockRecordKeys)
 
         // Filter by the location
