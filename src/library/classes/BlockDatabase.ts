@@ -8,7 +8,7 @@
 import { Dimension, DimensionLocation, Entity, EntityTypes, Player, world } from "@minecraft/server";
 import { BlockData } from "./BlockWrapper";
 import { BlockSnapshot } from "./BlockSnapshot";
-import { AreasEntityTypes, BlockInteractionTypes } from "library/definitions/areasWorld";
+import { DatabaseEntityTypes, BlockInteractionTypes, DatabaseValue } from "library/definitions/areasWorld";
 import { Database } from "./AreasDatabase";
 import { BlockRecordQueryOptions } from "library/definitions/query";
 import { DatabaseKeyRecord } from "library/definitions/key";
@@ -51,7 +51,7 @@ export class BlockDatabase {
         console.log("Entity type: ", entityType)
         console.log("Source Entity: ", unserialisedData.causeEntityTypeId)
 
-        if (entityType == AreasEntityTypes.Player) {
+        if (entityType == DatabaseEntityTypes.Player) {
             const playerId = unserialisedData.causePlayerId
             const playerName = Database.Names.getPlayerName(playerId)
             console.log("Player Name: ", playerName)
@@ -90,12 +90,12 @@ export class BlockDatabase {
 
         // Implement NBT checking later
         const isNBT = BlockData.hasNBT(block)
-        const structureId = "null"
+        const structureId = DatabaseValue.NULL
         const isNBTString = isNBT === true ? "1" : "0"
 
         // Use the type id if an entity, otherwise uses the id for a player
         // "null" if no source entity
-        let sourceEntityId = "null"
+        let sourceEntityId = DatabaseValue.NULL as string
         if (!(entity instanceof Player)) {
             // An entity is stored with type id
             sourceEntityId = entity.typeId
@@ -127,17 +127,17 @@ export class BlockDatabase {
 
         const isNBT = isNBTString === "1" ? true : false
 
-        let entityType: AreasEntityTypes
+        let entityType: DatabaseEntityTypes
         // These are set as undefined, then changed
         let causeEntityTypeId = undefined
         let causePlayerId = undefined
-        if (sourceEntityId === "null") {
-            entityType = AreasEntityTypes.None
+        if (sourceEntityId === DatabaseValue.NULL) {
+            entityType = DatabaseEntityTypes.None
         } else if (this.isId(sourceEntityId)) {
-            entityType = AreasEntityTypes.Player
+            entityType = DatabaseEntityTypes.Player
             causePlayerId = sourceEntityId
         } else {
-            entityType = AreasEntityTypes.NonPlayerEntity
+            entityType = DatabaseEntityTypes.NonPlayerEntity
             causeEntityTypeId = sourceEntityId
         }
 
@@ -265,13 +265,13 @@ export class BlockDatabase {
         // Now check for entities (including players)
         if (query.entityOptions) {
             const filterEntityType = query.entityOptions.entityType
-            if (filterEntityType === AreasEntityTypes.NonPlayerEntity) {
+            if (filterEntityType === DatabaseEntityTypes.NonPlayerEntity) {
                 const filterEntityTypeId = query.entityOptions.entityTypeId
                 if (filterEntityTypeId !== record.causeEntityTypeId) {
                     isMatching = false
                 }
 
-            } else if (filterEntityType === AreasEntityTypes.Player) {
+            } else if (filterEntityType === DatabaseEntityTypes.Player) {
                 const filterPlayerId = query.entityOptions.playerId
                 if (filterPlayerId !== record.causePlayerId) {
                     isMatching = false
