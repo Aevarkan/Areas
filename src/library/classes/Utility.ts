@@ -5,10 +5,11 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation } from "@minecraft/server";
+import { Block, BlockComponent, BlockComponentTypes, DimensionLocation, RawMessage } from "@minecraft/server";
 import { BlockEventRecord } from "library/definitions/record";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
+import { TimeUtilityFunctions } from "./TimeUtility";
 
 const blocksWithNBT = [
     MinecraftBlockTypes.Chest,
@@ -41,6 +42,12 @@ const blocksWithNBT = [
 
 class UtilityFunctions {
     
+    Time: TimeUtilityFunctions
+
+    constructor() {
+        this.Time = new TimeUtilityFunctions()
+    }
+
     /**
      * Checks if a dimension location matches another one.
      */
@@ -72,6 +79,33 @@ class UtilityFunctions {
     }
 
     /**
+     * Checks if a block has NBT data.
+     * @param block The block to check.
+     * @returns true if the block has NBT data, otherwise false
+     */
+    public hasNBT(block: Block) {
+        const blockTypeId = block.typeId
+        let hasNBT = false
+
+        // Predefined list of blocks with NBT
+        if (blocksWithNBT.includes(blockTypeId)) {
+            hasNBT = true
+        }
+
+        // We can check dynamically too
+        if (
+            block.getComponent(BlockComponentTypes.FluidContainer) ||
+            block.getComponent(BlockComponentTypes.Inventory) ||
+            block.getComponent(BlockComponentTypes.RecordPlayer) ||
+            block.getComponent(BlockComponentTypes.Sign)
+        ) {
+
+        }
+
+        return  hasNBT
+    }
+
+    /**
      * Parses a block event into a readable string.
      * @param record The block event record.
      * @param includeLocation Whether the string should contain the block location.
@@ -79,23 +113,17 @@ class UtilityFunctions {
     public parseBlockRecord(record: BlockEventRecord, includeLocation: boolean) {
         // Records should be something like
         // At time, player broke block:type
+        const date = new Date(record.time)
+        const year = date.getFullYear()
+        const month = date.getMonth()
+        const day =  date.getDate()
+        const hour = date.getHours()
+        const minute = date.getMinutes()
+        const second = date.getSeconds()
         
+        const timeMessage: RawMessage = {translate: "a"}
     }
 
-    /**
-     * Checks if a block has NBT data.
-     * @param block The block to check.
-     * @returns true if the block has NBT data, otherwise false
-     */
-    public hasNBT(block: BlockSnapshot) {
-        const blockTypeId = block.typeId
-        let hasNBT = false
-
-        if (blocksWithNBT.includes(blockTypeId)) {
-            hasNBT = true
-        }
-        return  hasNBT
-    }
 }
 
 /**
