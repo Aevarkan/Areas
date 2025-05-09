@@ -13,6 +13,7 @@ import { DatabaseKeyRecord } from "library/definitions/key";
 import { Utility } from "./Utility";
 import { BlockEventRecord, BlockEventRecordValue } from "library/definitions/record";
 import { DatabaseInvalidCharacterError } from "./Errors";
+import config from "config";
 
 const BLOCK_EVENT_PREFIX = "blockEvent"
 
@@ -135,6 +136,10 @@ export class BlockDatabase {
             }
         }
 
+        if (config.log) {
+            console.log("Serialised block interaction as: " + interaction)
+        }
+
         if (
             interaction.includes(",") ||
             blockTypeId.includes(",") ||
@@ -182,6 +187,10 @@ export class BlockDatabase {
         } else {
             entityType = DatabaseEntityTypes.NonPlayerEntity
             causeEntityTypeId = sourceEntityId
+        }
+
+        if (config.log) {
+            console.log("Unserialised block interaction as: " + interaction)
         }
 
         const blockRecordValue: BlockEventRecordValue = {

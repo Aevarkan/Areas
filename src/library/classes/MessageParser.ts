@@ -162,7 +162,8 @@ export class MessageParser {
         // entity.armadillo.name
 
         // This selects "armadillo" from "minecraft:armadillo"
-        const entityTypeIdNoNamespace = entityTypeId.split(":")[1]
+        // const entityTypeIdNoNamespace = entityTypeId.split(":")[1]
+        // This cannot be here though, as entityTypeId might be undefined
 
         let parsedEntityCause: RawMessage
         switch (causeEntityType) {
@@ -171,6 +172,7 @@ export class MessageParser {
                 break
 
             case DatabaseEntityTypes.NonPlayerEntity:
+                const entityTypeIdNoNamespace = entityTypeId.split(":")[1]
                 parsedEntityCause = { translate: `entity.${entityTypeIdNoNamespace}.name` }
                 break
 
@@ -259,15 +261,15 @@ export class MessageParser {
                 break
 
             case BlockInteractionTypes.BlockBroken:
-                interactionMessage = { translate: "areas.interaction.blockPlaced" }
-                break
-
-            case BlockInteractionTypes.BlockExploded:
                 interactionMessage = { translate: "areas.interaction.blockBroken" }
                 break
 
-            case BlockInteractionTypes.BlockPlaced:
+            case BlockInteractionTypes.BlockExploded:
                 interactionMessage = { translate: "areas.interaction.blockExploded" }
+                break
+
+            case BlockInteractionTypes.BlockPlaced:
+                interactionMessage = { translate: "areas.interaction.blockPlaced" }
                 break
 
             case BlockInteractionTypes.BlockInitialise:

@@ -28,4 +28,8 @@ export default {
      * @remarks This should have "\u00A7" at the start.
      */
     rolledBackRecordFormatCode: "\u00A7s\u00A7o",
+    /**
+     * Debug logging.
+     */
+    log: true
 }

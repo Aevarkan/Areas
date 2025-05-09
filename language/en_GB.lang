@@ -13,7 +13,7 @@ rp.inspector.recordNoLocation=%1 ago, %2 %3 %4.
 rp.inspector.recordNoEntityCause=WORLD
 
 rp.areas.interaction.blockPlaced=placed
-rp.areas.interaction.blockBroken=broken
+rp.areas.interaction.blockBroken=broke
 rp.areas.interaction.blockExploded=exploded
 rp.areas.interaction.blockInitialised=initialised
 
