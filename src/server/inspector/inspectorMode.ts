@@ -29,6 +29,39 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const player = session.player
     const playerQueryOptions = session.getBlockQueryOptions()
 
+    // Redo this: the message should be parsed in a class!
+    const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
+    blockLogs.forEach(blockLog => {
+        const time = blockLog.time
+        const interaction = blockLog.interaction
+        system.run(() => {
+            const message = `At ${time}, ${interaction} happened!`
+            player.sendMessage(message)
+        })
+    })
+})
+
+world.beforeEvents.playerBreakBlock.subscribe(event => {
+    const session = new PlayerSession(event.player)
+
+    // We only care if the session is enabled
+    if (!(session.isInspectorEnabled)) return
+
+    // Don't place blocks in inspector mode
+    event.cancel = true
+
+    const block = event.block
+    const blockLocation: DimensionLocation = {
+        x: block.location.x,
+        y: block.location.y,
+        z: block.location.z,
+        dimension: block.dimension
+    }
+
+    const player = session.player
+    const playerQueryOptions = session.getBlockQueryOptions()
+
+    // Redo this: the message should be parsed in a class!
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
     blockLogs.forEach(blockLog => {
         const time = blockLog.time
