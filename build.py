@@ -229,6 +229,7 @@ def bundle_vanilla_data():
             "esbuild",
             "node_modules/@minecraft/vanilla-data/lib/index.js",
             "--bundle",
+            "--format=esm",
             output,
             "--external:@minecraft/server",
             "--external:@minecraft/server-ui",
@@ -259,7 +260,7 @@ def remap_vanilla_data_imports():
                 # Remap import statements
                 content = re.sub(
                     r'import (.*?)(from\s*["\']@minecraft/vanilla-data[\'"])',
-                    r'import \1from "/library/modules/vanilla-data"',
+                    r'import \1from "library/modules/vanilla-data"',
                     content
                 )
 
