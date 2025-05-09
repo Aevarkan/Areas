@@ -44,7 +44,7 @@ export interface BlockEventRecord {
     interaction: BlockInteractionTypes,
     /**
      * @remarks
-     * The type id of the block affected block.
+     * The type id of the affected block.
      */
     typeId: string,
     /**
