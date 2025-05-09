@@ -259,6 +259,7 @@ export class BlockDatabase {
     /**
      * Gets the blockevent records for the whole world.
      * @param queryOptions Options on what to filter by.
+     * @returns A block event record array, sorted by oldest to newest.
      */
     public getBlockRecords(queryOptions?: BlockRecordQueryOptions): BlockEventRecord[] {
         const blockRecordKeyStrings = this.getBlockRecordKeys()
@@ -291,6 +292,10 @@ export class BlockDatabase {
         })
 
         const filteredRecords = blockRecords.filter(record => this.isRecordMatchingQuery(record, queryOptions))
+
+        // Sort the records by time
+        filteredRecords.sort((a, b) => a.time - b.time)
+
         return filteredRecords
     }
 
@@ -298,6 +303,7 @@ export class BlockDatabase {
      * Gets the blockevent records for a single block location.
      * @param blockLocation The {@link DimensionLocation} to check.
      * @param queryOptions Options on what to filter by.
+     * @returns Block event records for the location, sorted by oldest to newest.
      */
     public getBlockRecord(blockLocation: DimensionLocation, queryOptions: BlockRecordQueryOptions): BlockEventRecord[] {
         const blockRecordKeys = this.getBlockRecordKeys()
@@ -333,6 +339,10 @@ export class BlockDatabase {
         })
 
         const filteredRecords = blockRecords.filter(record => this.isRecordMatchingQuery(record, queryOptions))
+
+        // Sort the records by time
+        filteredRecords.sort((a, b) => a.time - b.time)
+
         return filteredRecords
     }
 
