@@ -1,6 +1,6 @@
-bp.pack.description=Logs things.
+bp.pack.description=Detects, and protects.
 bp.pack.name=Areas
-rp.pack.description=Logs things.
+rp.pack.description=Provides localisation for Areas.
 rp.pack.name=Areas Resource Pack
 
 # Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100.

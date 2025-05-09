@@ -1,19 +1,21 @@
-bp.pack.description=Logs things.
+bp.pack.description=Detects, and protects.
 bp.pack.name=Areas
-rp.pack.description=Logs things.
+rp.pack.description=Provides localization for Areas.
 rp.pack.name=Areas Resource Pack
 
 # Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100.
-rp.inspector.recordNoLocation=%1 ago, %2 %3 at %4.
+rp.inspector.recordWithLocation=%1 ago, %2 %3 %4 at %5.
 # Example: 5 seconds ago, Herobrine placed minecraft:tnt.
-rp.inspector.recordWithLocation=%1 ago, %2 %3.
+rp.inspector.recordNoLocation=%1 ago, %2 %3 %4.
 
-# Slants the text because strikethrough isn't on Bedrock >:(
-rp.inspector.recordNoLocationRolledBack=§o%1 ago, %2 %3 at %4.
-rp.inspector.recordWithLocationRolledBack=§o%1 ago, %2 %3.
 
 # We say the world did it if no entity was there.
 rp.inspector.recordNoEntityCause=WORLD
+
+rp.areas.interaction.blockPlaced=placed
+rp.areas.interaction.blockBroken=broken
+rp.areas.interaction.blockExploded=exploded
+rp.areas.interaction.blockInitialised=initialized
 
 # Coordinates
 rp.areas.coordinates=%1, %2, %3
@@ -25,3 +27,4 @@ rp.date.yearsPlural=%s years
 rp.date.monthsPlural=%s months
 
 rp.areas.unknown=Unknown
+rp.areas.combine2=%1%2
