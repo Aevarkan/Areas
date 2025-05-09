@@ -21,15 +21,17 @@ export default {
     /**
      * How a record should appear when its not rolled back.
      * @remarks This should have "\u00A7" at the start.
+     * @remarks Inputting multiple colours will cause them to cycle.
      */
-    recordFormatCode: "\u00A7p",
+    recordFormatCode: ["\u00A7s", "\u00A7q"],
     /**
      * How a record should appear when its rolled back.
      * @remarks This should have "\u00A7" at the start.
+     * @remarks Inputting multiple colours will cause them to cycle.
      */
-    rolledBackRecordFormatCode: "\u00A7s\u00A7o",
+    rolledBackRecordFormatCode:["\u00A7p\u00A7o", "\u00A7s\u00A7v"],
     /**
      * Debug logging.
      */
-    log: true
+    log: false
 }

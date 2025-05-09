@@ -17,6 +17,30 @@ import { Database } from "./AreasDatabase";
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import config from "config";
 
+// This is just so the colours change each line
+const nonRolledBackFormats = config.recordFormatCode.length
+const rolledBackFormats = config.rolledBackRecordFormatCode.length
+let formatIndex = 0
+let rolledBackFormatIndex = 0
+
+function incrementFormatIndex(index: number, rolledBackIndex: boolean) {
+    
+    if (rolledBackIndex) {
+        if (index + 1 >= rolledBackFormats) {
+            index = 0
+        } else {
+            index++
+        }
+    } else {
+        if (index + 1 >= nonRolledBackFormats) {
+            index = 0
+        } else {
+            index++
+        }
+    }
+    return index
+}
+
 export class MessageParser {
 
     /**
@@ -72,19 +96,27 @@ export class MessageParser {
 
         // We check if it's rolled back now and apply the colour codes from the config
         let formattedMessage: RawMessage
-        if (!(record.isRolledBack)) {
+        if (!(record.isRolledBack)) { // Not rolled back
+
+            // Purely cosmetic
+            formatIndex = incrementFormatIndex(formatIndex, false)
+
             formattedMessage = {
                 translate: "areas.combine2",
                 with: { rawtext: [
-                    { text: config.recordFormatCode },
+                    { text: config.recordFormatCode[formatIndex] },
                     combinedMessage
                 ]}
             }
         } else {
+
+            // Purely cosmetic
+            rolledBackFormatIndex = incrementFormatIndex(rolledBackFormatIndex, true)
+
             formattedMessage = {
                 translate: "areas.combine2",
                 with: { rawtext: [
-                    { text: config.rolledBackRecordFormatCode },
+                    { text: config.rolledBackRecordFormatCode[rolledBackFormatIndex] },
                     combinedMessage
                 ]}
             }
