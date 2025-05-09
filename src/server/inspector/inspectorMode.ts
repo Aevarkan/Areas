@@ -35,7 +35,10 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
 
     const messages = Utility.Message.parseBlockEventRecords(blockLogs, currentTime, false)
-    player.sendMessage(messages)
+    // player.sendMessage(messages)
+    messages.forEach(message => {
+        player.sendMessage(message)
+    })
 })
 
 world.beforeEvents.playerBreakBlock.subscribe(event => {
@@ -64,5 +67,8 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
 
     const messages = Utility.Message.parseBlockEventRecords(blockLogs, currentTime, false)
-    player.sendMessage(messages)
+    // player.sendMessage(messages)
+    messages.forEach(message => {
+        player.sendMessage(message)
+    })
 })
