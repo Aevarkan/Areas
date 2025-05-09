@@ -13,10 +13,12 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const session = new PlayerSession(event.player)
 
     // We only care if the session is enabled
-    if (!(session.isInspectorEnabled)) return
+    if (!(session.inspectorEnabled)) return
 
     // Don't place blocks in inspector mode
     event.cancel = true
+
+    const currentTime = Date.now()
 
     const block = event.block
     const blockLocation: DimensionLocation = {
@@ -45,7 +47,7 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
     const session = new PlayerSession(event.player)
 
     // We only care if the session is enabled
-    if (!(session.isInspectorEnabled)) return
+    if (!(session.inspectorEnabled)) return
 
     // Don't place blocks in inspector mode
     event.cancel = true

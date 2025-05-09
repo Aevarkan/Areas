@@ -33,7 +33,8 @@ export class PlayerNameDatabase {
     public getPlayerName(playerId: number): string {
         const key = `nameRecord.${playerId}`
 
-        const playerName = world.getDynamicProperty(key) as string
+        // It shouldn't ever be unknown, so that doesn't have to be localised.
+        const playerName = world.getDynamicProperty(key) as string ?? "unknown"
         return playerName
     }
 

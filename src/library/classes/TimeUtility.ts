@@ -27,6 +27,7 @@ export interface TimeUnit {
     biggestInterval: TimeIntervalUnit,
     /**
      * The number of intervals of the biggest time unit.
+     * @remarks Rounded to one decimal point.
      */
     biggestIntervals: number,
     /**
@@ -48,12 +49,14 @@ const millisecondsSeconds = 1000
 export class TimeUtilityFunctions {
 
     /**
-     * Gets the difference between two times, and outputs it in a Time object.
+     * Gets the difference between two times, and outputs it in a .
      * @param time1 The first time to compare.
      * @param time2 The second time to compare.
+     * @returns a {@link TimeUnit} object.
+     * @remarks This will output the absolute difference, disregarding sign.
      */
     public difference(time1: number, time2: number): TimeUnit {
-        const deltaTime = time1 - time2
+        const deltaTime = Math.abs(time1 - time2)
         const biggestInterval = this.biggestTimeInterval(deltaTime)
         const intervals = this.countIntervals(deltaTime, biggestInterval)
 
