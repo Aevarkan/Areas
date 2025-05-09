@@ -24,12 +24,14 @@ export default {
      * @remarks Inputting multiple colours will cause them to cycle.
      */
     recordFormatCode: ["\u00A7s", "\u00A7q"],
+    // recordFormatCode: ["\u00A7c", "\u00A76", "\u00A7e", "\u00A72", "\u00A71", "\u00A7u"], // Uncomment this for a rainbow.
     /**
      * How a record should appear when its rolled back.
      * @remarks This should have "\u00A7" at the start.
      * @remarks Inputting multiple colours will cause them to cycle.
      */
     rolledBackRecordFormatCode:["\u00A7p\u00A7o", "\u00A7s\u00A7v"],
+    // rolledBackRecordFormatCode:["\u00A7c\u00A7o", "\u00A76\u00A7o", "\u00A7e\u00A7o", "\u00A72\u00A7o", "\u00A71\u00A7o", "\u00A7u\u00A7o"] // Uncomment this for a rainbow.
     /**
      * Debug logging.
      */
