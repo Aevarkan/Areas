@@ -8,7 +8,8 @@
     "@minecraft/vanilla-data": "1.21.80"
   },
   "devDependencies": {
+    "esbuild": "^0.25.4",
+    "esbuild-plugin-tsconfig-paths": "^1.0.1",
     "typescript": "^5.8.2"
   }
 }
-

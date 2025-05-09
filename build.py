@@ -3,6 +3,7 @@ import os
 import subprocess
 import shutil
 import zipfile
+import re
 
 # No need to include the 'v' in front
 # Only change version count here and as github tag
@@ -213,6 +214,61 @@ def prepare_directories():
         os.makedirs(RP_PATH)
         os.makedirs(f'{RP_PATH}/texts')
 
+def bundle_vanilla_data():
+    # Bundle @minecraft/vanilla-data with Esbuild
+    output_path = BP_SCRIPTS_PATH + "/library/modules"
+    output_file = BP_SCRIPTS_PATH + "/library/modules/vanilla-data.js"
+
+    # if not os.path.exists(output_path):
+    os.makedirs(output_path)
+
+    output = "--outfile=" + output_file
+    result = subprocess.run(
+        [
+            "npx",
+            "esbuild",
+            "node_modules/@minecraft/vanilla-data/lib/index.js",
+            "--bundle",
+            output,
+            "--external:@minecraft/server",
+            "--external:@minecraft/server-ui",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print("Error bundling @minecraft/vanilla-data:")
+        print(result.stderr)
+        exit(1)
+    else:
+        print(f"Bundled @minecraft/vanilla-data into {BP_SCRIPTS_PATH}/vanilla-data-bundle.js")
+
+def remap_vanilla_data_imports():
+    # Create the dist directory if it doesn't exist
+    os.makedirs("dist", exist_ok=True)
+
+    # Iterate through all JavaScript files in the scripts directory
+    for root, _, files in os.walk("scripts"):
+        for file in files:
+            if file.endswith(".js"):
+                file_path = os.path.join(root, file)
+                # Read the file content
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+
+                # Remap import statements
+                content = re.sub(
+                    r'import (.*?)(from\s*["\']@minecraft/vanilla-data[\'"])',
+                    r'import \1from "/library/modules/vanilla-data"',
+                    content
+                )
+
+                # Write the modified content back to the file
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+    
+    print("Remapped @minecraft/vanilla-data imports in compiled JavaScript files.")
+
 def create_mcaddon(bp_path, rp_path, output_file_1, output_file_2, output_file_3):
     with zipfile.ZipFile(output_file_1, 'w', zipfile.ZIP_DEFLATED) as mcaddon:
         # We don't need to use a resource pack just yet
@@ -258,9 +314,16 @@ def build_project():
     # Rename the compiled file to constants.js
     rename_output_file()
 
+    # Remap imports for @minecraft/vanilla-data
+    remap_vanilla_data_imports()
+
     move_scripts()
 
     build_manifest()
+
+    bundle_vanilla_data()
+
+
 
     copy_misc_files()
 
