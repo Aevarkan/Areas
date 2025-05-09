@@ -8,6 +8,7 @@
 import { DimensionLocation, system, world } from "@minecraft/server";
 import { Database } from "library/classes/AreasDatabase";
 import { PlayerSession } from "library/classes/PlayerSession";
+import { Utility } from "library/classes/Utility";
 
 world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const session = new PlayerSession(event.player)
@@ -31,16 +32,10 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const player = session.player
     const playerQueryOptions = session.getBlockQueryOptions()
 
-    // Redo this: the message should be parsed in a class!
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
-    blockLogs.forEach(blockLog => {
-        const time = blockLog.time
-        const interaction = blockLog.interaction
-        system.run(() => {
-            const message = `At ${time}, ${interaction} happened!`
-            player.sendMessage(message)
-        })
-    })
+
+    const messages = Utility.Message.parseBlockEventRecords(blockLogs, currentTime, false)
+    player.sendMessage(messages)
 })
 
 world.beforeEvents.playerBreakBlock.subscribe(event => {
@@ -51,6 +46,8 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
 
     // Don't place blocks in inspector mode
     event.cancel = true
+
+    const currentTime = Date.now()
 
     const block = event.block
     const blockLocation: DimensionLocation = {
@@ -65,12 +62,7 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
 
     // Redo this: the message should be parsed in a class!
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
-    blockLogs.forEach(blockLog => {
-        const time = blockLog.time
-        const interaction = blockLog.interaction
-        system.run(() => {
-            const message = `At ${time}, ${interaction} happened!`
-            player.sendMessage(message)
-        })
-    })
+
+    const messages = Utility.Message.parseBlockEventRecords(blockLogs, currentTime, false)
+    player.sendMessage(messages)
 })

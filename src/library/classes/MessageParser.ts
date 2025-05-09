@@ -25,7 +25,7 @@ export class MessageParser {
      * @returns A rawmessage.
      * @remarks Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100 in nether.
      */
-    public blockEventRecord(record: BlockEventRecord, currentTime: number, includeLocation: boolean): RawMessage {
+    public parseBlockEventRecord(record: BlockEventRecord, currentTime: number, includeLocation: boolean): RawMessage {
         const timeDiference = Utility.Time.difference(currentTime, record.time)
         
         // Parse the time into human readable string
@@ -91,6 +91,22 @@ export class MessageParser {
         }
 
         return formattedMessage
+    }
+
+    /**
+     * Parses a {@link blockEventRecord} array into a RawMessage array.
+     * @param record The block event record array.
+     * @returns A rawmessage array.
+     */
+    public parseBlockEventRecords(records: BlockEventRecord[], currentTime: number, includeLocation: boolean): RawMessage[] {
+        
+        const parsedRecords = [] as RawMessage[]
+        records.forEach(record => {
+            const parsedRecord = this.parseBlockEventRecord(record, currentTime, includeLocation)
+            parsedRecords.push(parsedRecord)
+        })
+
+        return parsedRecords
     }
 
     /**
