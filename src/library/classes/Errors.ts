@@ -14,3 +14,8 @@ export class DatabaseInvalidCharacterError extends Error {}
  * When a calcuation gives a value that is know to be wrong.
  */
 export class CalculationError extends Error {}
+
+/**
+ * When a raw message is incorrectly parsed.
+ */
+export class RawMessageParseError extends Error {}

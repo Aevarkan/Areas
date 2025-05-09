@@ -10,6 +10,7 @@ import { BlockEventRecord } from "library/definitions/record";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 import { TimeUtilityFunctions } from "./TimeUtility";
+import { MessageParser } from "./MessageParser";
 
 const blocksWithNBT = [
     MinecraftBlockTypes.Chest,
@@ -43,9 +44,11 @@ const blocksWithNBT = [
 class UtilityFunctions {
     
     Time: TimeUtilityFunctions
+    Message: MessageParser
 
     constructor() {
         this.Time = new TimeUtilityFunctions()
+        this.Message = new MessageParser()
     }
 
     /**

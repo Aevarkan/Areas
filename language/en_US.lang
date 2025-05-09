@@ -2,3 +2,26 @@ bp.pack.description=Logs things.
 bp.pack.name=Areas
 rp.pack.description=Logs things.
 rp.pack.name=Areas Resource Pack
+
+# Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100.
+rp.inspector.recordNoLocation=%1 ago, %2 %3 at %4.
+# Example: 5 seconds ago, Herobrine placed minecraft:tnt.
+rp.inspector.recordWithLocation=%1 ago, %2 %3.
+
+# Slants the text because strikethrough isn't on Bedrock >:(
+rp.inspector.recordNoLocationRolledBack=§o%1 ago, %2 %3 at %4.
+rp.inspector.recordWithLocationRolledBack=§o%1 ago, %2 %3.
+
+# We say the world did it if no entity was there.
+rp.inspector.recordNoEntityCause=WORLD
+
+# Coordinates
+rp.areas.coordinates=%1, %2, %3
+# %1 is the coordinate value, %2 is the dimension.
+rp.areas.dimensionLocation=%1 in %2
+
+# There aren't years or months in the vanilla resource pack, so we add them ourselves
+rp.date.yearsPlural=%s years
+rp.date.monthsPlural=%s months
+
+rp.areas.unknown=Unknown

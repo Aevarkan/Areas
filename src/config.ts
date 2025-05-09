@@ -13,9 +13,19 @@ export default {
      * The tag to check if a player should have admin permissions according to Areas.
      * @remarks set this to undefined to not have a tag.
      */
-    OperatorTag: "areas:admin",
+    operatorTag: "areas:admin",
     /**
      * Whether Areas should check
      */
-    CheckForOp: true
+    checkForOp: true,
+    /**
+     * How a record should appear when its not rolled back.
+     * @remarks This should have "\u00A7" at the start.
+     */
+    recordFormatCode: "\u00A7p",
+    /**
+     * How a record should appear when its rolled back.
+     * @remarks This should have "\u00A7" at the start.
+     */
+    rolledBackRecordFormatCode: "\u00A7s\u00A7o",
 }

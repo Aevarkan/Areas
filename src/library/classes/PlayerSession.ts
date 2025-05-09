@@ -36,7 +36,7 @@ export class PlayerSession {
         this.isOperator = false
 
         // When there is isOp, add that too
-        if (config.OperatorTag && player.hasTag(config.OperatorTag)) {
+        if (config.operatorTag && player.hasTag(config.operatorTag)) {
             this.isOperator = true
         }
 

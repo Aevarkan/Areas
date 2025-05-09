@@ -3,3 +3,28 @@ bp.pack.name=Areas
 rp.pack.description=Logs things.
 rp.pack.name=Areas Resource Pack
 
+# Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100.
+rp.inspector.recordWithLocation=%1 ago, %2 %3 %4 at %5.
+# Example: 5 seconds ago, Herobrine placed minecraft:tnt.
+rp.inspector.recordNoLocation=%1 ago, %2 %3 %4.
+
+
+# We say the world did it if no entity was there.
+rp.inspector.recordNoEntityCause=WORLD
+
+rp.areas.interaction.blockPlaced=placed
+rp.areas.interaction.blockBroken=broken
+rp.areas.interaction.blockExploded=exploded
+rp.areas.interaction.blockInitialised=initialised
+
+# Coordinates
+rp.areas.coordinates=%1, %2, %3
+# %1 is the coordinate value, %2 is the dimension.
+rp.areas.dimensionLocation=%1 in %2
+
+# There aren't years or months in the vanilla resource pack, so we add them ourselves
+rp.date.yearsPlural=%s years
+rp.date.monthsPlural=%s months
+
+rp.areas.unknown=Unknown
+rp.areas.combine2=%1%2
