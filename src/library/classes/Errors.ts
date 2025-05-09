@@ -9,3 +9,8 @@
  * When a database entry uses a character used in the separator.
  */
 export class DatabaseInvalidCharacterError extends Error {}
+
+/**
+ * When a calcuation gives a value that is know to be wrong.
+ */
+export class CalculationError extends Error {}
