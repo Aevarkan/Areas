@@ -20,6 +20,7 @@ export interface BlockEventRecordValue {
     causeEntityType: DatabaseEntityTypes,
     causeEntityTypeId?: string,
     causePlayerId?: number
+    isRolledBack: boolean
 }
 
 /**
@@ -71,4 +72,9 @@ export interface BlockEventRecord {
      * The player id that caused this record to be made.
      */
     causePlayerId?: number
+    /**
+     * @remarks
+     * Whether this record has been rolled back.
+     */
+    isRolledBack: boolean
 }
