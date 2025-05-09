@@ -27,30 +27,10 @@ export class BlockDatabase {
      * @param entity The optional entity that was responsible for the interaction.
      */
     public logBlockEvent(time: number, block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
-
-        // We cannot get the time here, this is not good practice (what if the logging takes a while?)
-        // const time = Date.now()
-        const serialisedData = this.serialiseBlockEvent(block, interaction, time, entity)
+        const isRolledBack = false // This is false because we just made the event
+        const serialisedData = this.serialiseBlockEvent(block, interaction, time, isRolledBack, entity)
         world.setDynamicProperty(serialisedData.key, serialisedData.value)
 
-        // Simply code from when I was testing
-        // ###############################
-        // console.log(serialisedData.key, serialisedData.value)
-
-        // Unserialising for test
-        // const unserialisedData = this.unserialiseBlockEventRecord(serialisedData.value)
-        // const entityType = unserialisedData.causeEntityType
-
-        // console.log("Interaction type: ", unserialisedData.interaction)
-        // console.log("NBT: ", unserialisedData.isNBT)
-        // console.log("Entity type: ", entityType)
-        // console.log("Source Entity: ", unserialisedData.causeEntityTypeId)
-
-        // if (entityType == DatabaseEntityTypes.Player) {
-        //     const playerId = unserialisedData.causePlayerId
-        //     const playerName = Database.Names.getPlayerName(playerId)
-        //     console.log("Player Name: ", playerName)
-        // }
     }
 
     /**
@@ -68,10 +48,11 @@ export class BlockDatabase {
      * @param block The block that was effected.
      * @param interaction What happened to the block.
      * @param time Unix time of the block event.
+     * @param isRolledBack Whether the event has been rolled back.
      * @param entity The optional entity that caused the interaction.
      * @returns A key value pair of the event in string form.
      */
-    private serialiseBlockEvent(block: BlockSnapshot, interaction: BlockInteractionTypes, time: number, entity?: Entity) {
+    private serialiseBlockEvent(block: BlockSnapshot, interaction: BlockInteractionTypes, time: number, isRolledBack: boolean, entity?: Entity) {
         // In the database, it should be saved as:
         // Key:
         // blockEvent.time.x.y.z.dimension
@@ -86,7 +67,7 @@ export class BlockDatabase {
         }
 
         const key = this.serialiseKey(time, blockLocation)
-        const value = this.serialiseValue(block, interaction, entity)
+        const value = this.serialiseValue(block, interaction, isRolledBack, entity)
 
         return {key, value}
     }
@@ -128,15 +109,17 @@ export class BlockDatabase {
      * @param entity The optional entity that caused the event.
      * @returns The value in string form.
      */
-    private serialiseValue(block: BlockSnapshot, interaction: BlockInteractionTypes, entity?: Entity) {
+    private serialiseValue(block: BlockSnapshot, interaction: BlockInteractionTypes, isRolledBack: boolean, entity?: Entity) {
         // Value
         // * interaction is given as an arguement
         const blockTypeId = block.typeId
 
         // Implement NBT checking later
-        const isNBT = Utility.hasNBT(block)
+        // const isNBT = Utility.hasNBT(block)
+        const isNBT = true
         const structureId = DatabaseValue.NULL
         const isNBTString = isNBT === true ? DatabaseValue.True : DatabaseValue.NULL
+        const isRolledBackString = isRolledBack ? DatabaseValue.True : DatabaseValue.NULL
 
         // Use the type id if an entity, otherwise uses the id for a player
         // "null" if no source entity
@@ -157,6 +140,7 @@ export class BlockDatabase {
             blockTypeId.includes(",") ||
             isNBTString.includes(",") ||
             structureId.includes(",") ||
+            isRolledBackString.includes(",") ||
             sourceEntityId.includes(",")
         ) {
             system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer. Comma found."))
@@ -164,14 +148,14 @@ export class BlockDatabase {
         }
 
         // Must all be strings
-        const value = `${interaction},${blockTypeId},${isNBTString},${structureId},${sourceEntityId}`
+        const value = `${interaction},${blockTypeId},${isNBTString},${structureId},${sourceEntityId},${isRolledBackString}`
         return value
     }
 
     /**
      * Unserialises a stored block event value.
      * @remarks This doesn't work for the key.
-     * @param value 
+     * @param value The block event value.
      */
     private unserialiseBlockEventRecord(value: string) {
         const parts = value.split(",")
@@ -181,8 +165,10 @@ export class BlockDatabase {
         const isNBTString = parts[2]
         const structureId = parts[3]
         const sourceEntityId = parts[4]
+        const isRolledBackString = parts[5]
 
         const isNBT = isNBTString === DatabaseValue.True ? true : false
+        const isRolledBack = isRolledBackString === DatabaseValue.True ? true : false
 
         let entityType: DatabaseEntityTypes
         // These are set as undefined, then changed
@@ -206,7 +192,8 @@ export class BlockDatabase {
             causeEntityType: entityType,
             structureId: isNBT ? structureId : undefined,
             causeEntityTypeId: causeEntityTypeId,
-            causePlayerId: causePlayerId
+            causePlayerId: causePlayerId,
+            isRolledBack: isRolledBack
         }
 
         return blockRecordValue
@@ -250,9 +237,10 @@ export class BlockDatabase {
         // We use the special initialise interaction and set the time to 0
         const interactionType = BlockInteractionTypes.BlockInitialise
         const time = 0 // 1st Jan 1970
+        const isRolledBack = false
 
         // Everything else is the same
-        const serialisedBlockEvent = this.serialiseBlockEvent(block, interactionType, time)
+        const serialisedBlockEvent = this.serialiseBlockEvent(block, interactionType, time, isRolledBack)
         const key = serialisedBlockEvent.key
         const value = serialisedBlockEvent.value
 
@@ -286,7 +274,8 @@ export class BlockDatabase {
                 typeId: blockRecordValue.typeId,
                 causeEntityTypeId: blockRecordValue.causeEntityTypeId,
                 causePlayerId: blockRecordValue.causePlayerId,
-                structureId: blockRecordValue.structureId
+                structureId: blockRecordValue.structureId,
+                isRolledBack: blockRecordValue.isRolledBack
             }
 
             blockRecords.push(blockRecord)
@@ -327,7 +316,8 @@ export class BlockDatabase {
                 typeId: blockRecordValue.typeId,
                 causeEntityTypeId: blockRecordValue.causeEntityTypeId,
                 causePlayerId: blockRecordValue.causePlayerId,
-                structureId: blockRecordValue.structureId
+                structureId: blockRecordValue.structureId,
+                isRolledBack: blockRecordValue.isRolledBack
             }
 
             blockRecords.push(blockRecord)
