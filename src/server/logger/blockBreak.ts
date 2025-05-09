@@ -21,7 +21,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
     // Don't log if the player is in inspector mode
     // Inspector mode doesn't allow block breaking anyway
     const session = new PlayerSession(player)
-    if (session.isInspectorEnabled) return
+    if (session.inspectorEnabled) return
 
     const time = Date.now()
     const blockSnapshot = new BlockSnapshot(block)

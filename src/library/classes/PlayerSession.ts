@@ -7,7 +7,7 @@
 
 import { DimensionLocation, Player } from "@minecraft/server";
 import config from "config";
-import { BlockRecordQueryOptions, TimeQueryOptions } from "library/definitions/query";
+import { BlockRecordQueryOptions } from "library/definitions/query";
 
 const IS_INSPECTOR_ENABLED_DP = "inspector"
 
@@ -19,19 +19,20 @@ export class PlayerSession {
     /**
      * The player this inspector session is for.
      */
-    player: Player
+    public readonly player: Player
     /**
      * Whether inspector mode is enabled for the player.
      */
-    isInspectorEnabled: boolean
+    private isInspectorEnabled: boolean
     /**
      * Whether the player is an operator.
      */
-    isOperator: boolean
+    public readonly isOperator: boolean
 
     constructor(player: Player) {
         this.player = player
-        this.isInspectorEnabled = player.getDynamicProperty(IS_INSPECTOR_ENABLED_DP) as boolean ?? false
+        // this.isInspectorEnabled = player.getDynamicProperty(IS_INSPECTOR_ENABLED_DP) as boolean ?? false
+        this.isInspectorEnabled = false
         this.isOperator = false
 
         // When there is isOp, add that too
@@ -44,19 +45,20 @@ export class PlayerSession {
     }
 
     /**
-     * Enables inspector mode for the player.
+     * @remarks
+     * Setter: Enables/Disables inspector mode for the player.
      */
-    public enableInspector() {
-        this.isInspectorEnabled = true
-        this.player.setDynamicProperty(IS_INSPECTOR_ENABLED_DP, true)
+    public set inspectorEnabled(enabled: boolean) {
+        this.isInspectorEnabled = enabled
+        this.player.setDynamicProperty(IS_INSPECTOR_ENABLED_DP, enabled)
     }
 
     /**
-     * Disabled inspector mode for the player.
+     * @remarks
+     * Getter: Gets if inspector mode is enabled for the player.
      */
-    public disableInspector() {
-        this.isInspectorEnabled = false
-        this.player.setDynamicProperty(IS_INSPECTOR_ENABLED_DP, false)
+    public get inspectorEnabled() {
+        return this.isInspectorEnabled
     }
 
     /**

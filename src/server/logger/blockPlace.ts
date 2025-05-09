@@ -29,7 +29,7 @@ world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
     // This shouldn't even trigger as its an after event
     // Inspector mode doesn't allow block placement anyway
     const session = new PlayerSession(player)
-    if (session.isInspectorEnabled) return
+    if (session.inspectorEnabled) return
 
     const blockSnapshot = new BlockSnapshot(block)
     const time = Date.now()
@@ -41,7 +41,7 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
 
     // Don't log if the player is in inspector mode
     const session = new PlayerSession(event.player)
-    if (session.isInspectorEnabled) return
+    if (session.inspectorEnabled) return
 
     const block = event.block
     Database.Block.safelyInitialiseBlock(block)
