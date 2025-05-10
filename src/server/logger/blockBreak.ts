@@ -7,6 +7,7 @@
 
 import { Block, DimensionLocation, system, Vector3, world } from "@minecraft/server";
 import { Database } from "library/classes/AreasDatabase";
+import { Areas } from "library/classes/AreasSystem";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
 import { PlayerSession } from "library/classes/PlayerSession";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
@@ -20,7 +21,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 
     // Don't log if the player is in inspector mode
     // Inspector mode doesn't allow block breaking anyway
-    const session = new PlayerSession(player)
+    const session = Areas.getPlayerSession(player)
     if (session.inspectorEnabled) return
 
     const time = Date.now()

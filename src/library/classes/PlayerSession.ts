@@ -26,7 +26,7 @@ export class PlayerSession {
     /**
      * Whether inspector mode is enabled for the player.
      */
-    private isInspectorEnabled: boolean
+    public inspectorEnabled: boolean
     /**
      * Whether the player is an operator.
      */
@@ -35,33 +35,13 @@ export class PlayerSession {
     constructor(player: Player) {
         this.player = player
         // this.isInspectorEnabled = player.getDynamicProperty(IS_INSPECTOR_ENABLED_DP) as boolean ?? false
-        this.isInspectorEnabled = false
+        this.inspectorEnabled = false
         this.isOperator = false
 
         // When there is isOp, add that too
         if (config.operatorTag && player.hasTag(config.operatorTag)) {
             this.isOperator = true
         }
-
-        // DEBUG
-        this.isInspectorEnabled = true
-    }
-
-    /**
-     * @remarks
-     * Setter: Enables/Disables inspector mode for the player.
-     */
-    public set inspectorEnabled(enabled: boolean) {
-        this.isInspectorEnabled = enabled
-        this.player.setDynamicProperty(IS_INSPECTOR_ENABLED_DP, enabled)
-    }
-
-    /**
-     * @remarks
-     * Getter: Gets if inspector mode is enabled for the player.
-     */
-    public get inspectorEnabled() {
-        return this.isInspectorEnabled
     }
 
     /**

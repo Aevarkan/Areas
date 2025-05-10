@@ -5,8 +5,9 @@
  * Author: Aevarkan
  */
 
-import { world } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { Database } from "library/classes/AreasDatabase";
+import { Areas } from "library/classes/AreasSystem";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
 import { PlayerSession } from "library/classes/PlayerSession";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
@@ -28,7 +29,7 @@ world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
     // Don't log if the player is in inspector mode
     // This shouldn't even trigger as its an after event
     // Inspector mode doesn't allow block placement anyway
-    const session = new PlayerSession(player)
+    const session = Areas.getPlayerSession(player)
     if (session.inspectorEnabled) return
 
     const blockSnapshot = new BlockSnapshot(block)
@@ -40,7 +41,7 @@ world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
 world.beforeEvents.playerBreakBlock.subscribe(event => {
 
     // Don't log if the player is in inspector mode
-    const session = new PlayerSession(event.player)
+    const session = Areas.getPlayerSession(event.player)
     if (session.inspectorEnabled) return
 
     const block = event.block

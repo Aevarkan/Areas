@@ -6,25 +6,30 @@
  */
 
 import { CommandPermissionLevel, CustomCommand, CustomCommandOrigin, CustomCommandResult, CustomCommandStatus, Player, system, world } from "@minecraft/server";
+import { Areas } from "library/classes/AreasSystem";
+import { Commands } from "library/classes/CommandRegister";
 
-const inspectCommand: CustomCommand = {
+const inspectCustomCommand: CustomCommand = {
     description: "Toggles inspect mode.",
     name: "areas:inspect",
     permissionLevel: CommandPermissionLevel.Admin,
 }
 
-system.beforeEvents.startup.subscribe(event => {
-    const registry = event.customCommandRegistry
-    registry.registerCommand(inspectCommand, inspectCommandFunction)
-})
+function inspectCommand(origin: CustomCommandOrigin): CustomCommandResult {
 
-function inspectCommandFunction(origin: CustomCommandOrigin): CustomCommandResult {
-
-    const player = origin.sourceEntity as Player
-    player.sendMessage("Sucess!")
-
-    const result: CustomCommandResult = {
-        status: CustomCommandStatus.Success
+    const player = origin.sourceEntity
+    let result: CustomCommandResult = {
+        status: CustomCommandStatus.Failure
     }
+
+    if (!(player instanceof Player)) return result
+
+    result = { status: CustomCommandStatus.Success }
+
+    const session = Areas.getPlayerSession(player)
+    session.inspectorEnabled = !session.inspectorEnabled
+
     return result
 }
+
+Commands.registerCommand(inspectCustomCommand, inspectCommand)

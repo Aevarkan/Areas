@@ -5,6 +5,8 @@
  * Author: Aevarkan
  */
 
+import { CommandPermissionLevel } from "@minecraft/server";
+
 /**
  * Configuration settings.
  */
@@ -39,5 +41,10 @@ export default {
     /**
      * The prefix that will appear in front of every message.
      */
-    messagePrefix: "\u00A7s\u00A7lAreas >>\u00A7r "
+    messagePrefix: "\u00A7s\u00A7lAreas >>\u00A7r ",
+    /**
+     * The command permission level required to do commands.
+     * @remarks Set this to `CommandPermissionLevel.Any` to let anyone run commands.
+     */
+    commandPermissionLevel: CommandPermissionLevel.Admin
 }

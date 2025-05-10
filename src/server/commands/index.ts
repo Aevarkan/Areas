@@ -5,11 +5,4 @@
  * Author: Aevarkan
  */
 
-import "./logger/blockBreak"
-import "./logger/blockPlace"
-import "./logger/entityDie"
-import "./logger/playerName"
-
-import "./inspector/inspectorMode"
-
-import "./commands/index"
+import "./inspect"

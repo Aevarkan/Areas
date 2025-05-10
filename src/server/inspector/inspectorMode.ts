@@ -7,15 +7,16 @@
 
 import { DimensionLocation, system, world } from "@minecraft/server";
 import { Database } from "library/classes/AreasDatabase";
+import { Areas } from "library/classes/AreasSystem";
 import { PlayerSession } from "library/classes/PlayerSession";
 import { Utility } from "library/classes/Utility";
 import { DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { MessageInfo } from "library/definitions/rawMessages";
 
 world.beforeEvents.playerPlaceBlock.subscribe(event => {
-    const session = new PlayerSession(event.player)
+    const session = Areas.getPlayerSession(event.player)
 
-    // We only care if the session is enabled
+    // We only care if inspector is enabled
     if (!(session.inspectorEnabled)) return
 
     // Don't place blocks in inspector mode
@@ -50,9 +51,9 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
 })
 
 world.beforeEvents.playerBreakBlock.subscribe(event => {
-    const session = new PlayerSession(event.player)
+    const session = Areas.getPlayerSession(event.player)
 
-    // We only care if the session is enabled
+    // We only care if inspector is enabled
     if (!(session.inspectorEnabled)) return
 
     // Don't place blocks in inspector mode
