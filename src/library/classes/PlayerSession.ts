@@ -5,9 +5,12 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation, Player } from "@minecraft/server";
+import { DimensionLocation, Player, RawMessage } from "@minecraft/server";
 import config from "config";
+import { DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { BlockRecordQueryOptions } from "library/definitions/query";
+import { Utility } from "./Utility";
+import { MessageInfo } from "library/definitions/rawMessages";
 
 const IS_INSPECTOR_ENABLED_DP = "inspector"
 
@@ -82,5 +85,17 @@ export class PlayerSession {
      */
     public hasPlacePermission(location: DimensionLocation) {
 
+    }
+
+    /**
+     * Sends the player the results of inspect mode.
+     */
+    public sendInspectMessage(rawMessages: RawMessage[], logType: DatabaseQueryTypes, includeLocation: boolean, messageInformation: MessageInfo) {
+        
+        // Add the message header to the top
+        const headerMessage = Utility.RawText.parseMessageHeader(logType, messageInformation)
+        rawMessages.unshift(headerMessage)
+
+        this.player.sendMessage(rawMessages)
     }
 }

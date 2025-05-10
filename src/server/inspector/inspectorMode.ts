@@ -9,6 +9,8 @@ import { DimensionLocation, system, world } from "@minecraft/server";
 import { Database } from "library/classes/AreasDatabase";
 import { PlayerSession } from "library/classes/PlayerSession";
 import { Utility } from "library/classes/Utility";
+import { DatabaseQueryTypes } from "library/definitions/areasWorld";
+import { MessageInfo } from "library/definitions/rawMessages";
 
 world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const session = new PlayerSession(event.player)
@@ -29,16 +31,19 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
         dimension: block.dimension
     }
 
-    const player = session.player
+    // const player = session.player
     const playerQueryOptions = session.getBlockQueryOptions()
 
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
 
-    const messages = Utility.Message.parseBlockEventRecords(blockLogs, currentTime, false)
-    // player.sendMessage(messages)
-    messages.forEach(message => {
-        player.sendMessage(message)
-    })
+    const messages = Utility.RawText.parseBlockEventRecords(blockLogs, currentTime, false)
+    const messageInfo: MessageInfo = {
+        x: blockLocation.x.toString(),
+        y: blockLocation.y.toString(),
+        z: blockLocation.z.toString()
+    }
+
+    session.sendInspectMessage(messages, DatabaseQueryTypes.SingleLocationLog, false, messageInfo)
 })
 
 world.beforeEvents.playerBreakBlock.subscribe(event => {
@@ -66,7 +71,7 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
     // Redo this: the message should be parsed in a class!
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
 
-    const messages = Utility.Message.parseBlockEventRecords(blockLogs, currentTime, false)
+    const messages = Utility.RawText.parseBlockEventRecords(blockLogs, currentTime, false)
     // player.sendMessage(messages)
     messages.forEach(message => {
         player.sendMessage(message)

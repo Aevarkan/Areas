@@ -35,5 +35,9 @@ export default {
     /**
      * Debug logging.
      */
-    log: false
+    log: false,
+    /**
+     * The prefix that will appear in front of every message.
+     */
+    messagePrefix: "\u00A7s\u00A7lAreas >>\u00A7r "
 }

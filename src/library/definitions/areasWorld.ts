@@ -6,6 +6,28 @@
  */
 
 /**
+ * The different types of queries.
+ */
+export enum DatabaseQueryTypes {
+    /**
+     * Looking up logs for a single block.
+     */
+    SingleLocationLog = "single",
+    /**
+     * Looking up logs in an area.
+     */
+    AreaLog = "area",
+    /**
+     * Looking up logs caused by an entity type.
+     */
+    CauseLog = "entityCause",
+    /**
+     * Looking up the logs for a player.
+     */
+    PlayerLog = "player"
+}
+
+/**
  * What can happen to a block, and how it happened.
  */
 export enum BlockInteractionTypes {

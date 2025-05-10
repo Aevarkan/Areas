@@ -44,11 +44,11 @@ const blocksWithNBT = [
 class UtilityFunctions {
     
     Time: TimeUtilityFunctions
-    Message: MessageParser
+    RawText: MessageParser
 
     constructor() {
         this.Time = new TimeUtilityFunctions()
-        this.Message = new MessageParser()
+        this.RawText = new MessageParser()
     }
 
     /**

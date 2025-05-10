@@ -12,10 +12,11 @@ import { Utility } from "./Utility";
 import { TimeIntervalUnit, TimeUnit } from "./TimeUtility";
 import { RawMessageParseError } from "./Errors";
 import { Dimension, DimensionLocation, DimensionTypes, RawMessage } from "@minecraft/server";
-import { BlockInteractionTypes, DatabaseEntityTypes } from "library/definitions/areasWorld";
+import { BlockInteractionTypes, DatabaseEntityTypes, DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { Database } from "./AreasDatabase";
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import config from "config";
+import { MessageInfo } from "library/definitions/rawMessages";
 
 // This is just so the colours change each line
 const nonRolledBackFormats = config.recordFormatCode.length
@@ -42,6 +43,84 @@ function incrementFormatIndex(index: number, rolledBackIndex: boolean) {
 }
 
 export class MessageParser {
+
+    /**
+     * Adds the Areas addon prefix to a RawMessage.
+     * @param message The message to add a prefix to.
+     * @returns A raw message with the prefix added.
+     */
+    public addPrefix(message: RawMessage) {
+        const newMessage: RawMessage = {
+            translate: "areas.combine2",
+            with: { rawtext: [
+                { text: config.messagePrefix },
+                message
+            ]}
+        }
+        return newMessage
+    }
+
+    /**
+     * Combines two raw messages.
+     * @param message1 The first message.
+     * @param message2 The second message.
+     * @returns A combined message.
+     * @remarks The first message will come first.
+     */
+    private combineMessage(message1: RawMessage, message2: RawMessage) {
+
+        const newMessage: RawMessage = {
+            translate: "areas.combine2",
+            with: { rawtext: [
+                message1,
+                message2
+            ]}
+        }
+        return newMessage
+    }
+
+    public parseMessageHeader(logType: DatabaseQueryTypes, messageInformation: MessageInfo) {
+        
+        // Use the message body type we want
+        let messageHeaderBody: RawMessage
+        switch (logType) {
+            case DatabaseQueryTypes.SingleLocationLog:
+                messageHeaderBody = {
+                    translate: "inspector.singleLocationLog",
+                    with: [
+                        messageInformation.x,
+                        messageInformation.y,
+                        messageInformation.z
+                    ]
+                }
+                break
+
+            case DatabaseQueryTypes.AreaLog:
+                messageHeaderBody = { translate: "inspector.areaLog" }
+                break
+
+            case DatabaseQueryTypes.CauseLog:
+                messageHeaderBody = { translate: "inspector.entityCauseLog", with: messageInformation.entityCause }
+                break
+
+            case DatabaseQueryTypes.PlayerLog:
+                messageHeaderBody = { translate: "inspector.playerLog", with: [ messageInformation.playerName ]}
+                break
+
+            default:
+                throw new RawMessageParseError("Message body parsed incorrectly.")
+        }
+
+        // Combine the with the header
+        const wholeMessage: RawMessage = {
+            translate: "inspector.messageHeader",
+            with: messageHeaderBody
+        }
+
+        // Now add the prefix
+        const completeMessage = this.addPrefix(wholeMessage)
+        return completeMessage
+    }
 
     /**
      * Parses a {@link blockEventRecord} into a RawMessage.
