@@ -15,7 +15,8 @@ import { BlockEventRecord, BlockEventRecordValue } from "library/definitions/rec
 import { DatabaseInvalidCharacterError } from "./Errors";
 import config from "config";
 
-const BLOCK_EVENT_PREFIX = "blockEvent"
+// const BLOCK_EVENT_PREFIX = "blockEvent"
+const BLOCK_EVENT_PREFIX = "b" // We really need to conserve space
 
 export class BlockDatabase {
 
@@ -81,14 +82,15 @@ export class BlockDatabase {
      */
     private serialiseKey(time: number, blockLocation: DimensionLocation): string {
 
-        const blockX = blockLocation.x
-        const blockY = blockLocation.y
-        const blockZ = blockLocation.z
+        const base64Time = Utility.compressNumber(time)
+        const blockX = Utility.compressNumber(blockLocation.x)
+        const blockY = Utility.compressNumber(blockLocation.y)
+        const blockZ = Utility.compressNumber(blockLocation.z)
         const blockDimension = blockLocation.dimension.id
 
         if (
             BLOCK_EVENT_PREFIX.includes(".") ||
-            time.toString().includes(".") ||
+            base64Time.toString().includes(".") ||
             blockX.toString().includes(".") ||
             blockY.toString().includes(".") ||
             blockZ.toString().includes(".") ||
@@ -98,8 +100,10 @@ export class BlockDatabase {
             throw new DatabaseInvalidCharacterError('Invalid character "." found in key.')
         }
 
+        // console.log("Compressed " + base64Time + " original: " + time )
+
         // Must all be strings
-        const key = `${BLOCK_EVENT_PREFIX}.${time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
+        const key = `${BLOCK_EVENT_PREFIX}.${base64Time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
         return key
     }
 
@@ -472,10 +476,10 @@ export class BlockDatabase {
         const parts = key.split(".")
 
         // parts[0] is the prefix
-        const time = parseInt(parts[1])
-        const blockX = parseInt(parts[2])
-        const blockY = parseInt(parts[3])
-        const blockZ = parseInt(parts[4])
+        const time = Utility.uncompressNumber(parts[1])
+        const blockX = Utility.uncompressNumber(parts[2])
+        const blockY = Utility.uncompressNumber(parts[3])
+        const blockZ = Utility.uncompressNumber(parts[4])
         const blockDimensionString = parts[5]
 
         const blockDimension = world.getDimension(blockDimensionString)

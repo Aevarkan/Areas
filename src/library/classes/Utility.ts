@@ -11,6 +11,7 @@ import { BlockSnapshot } from "./BlockSnapshot";
 import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 import { TimeUtilityFunctions } from "./TimeUtility";
 import { MessageParser } from "./MessageParser";
+import { BASE64 } from "constants";
 
 const blocksWithNBT = [
     MinecraftBlockTypes.Chest,
@@ -126,6 +127,50 @@ class UtilityFunctions {
         
         const timeMessage: RawMessage = {translate: "a"}
     }
+
+    /**
+     * Compresses a number into base64.
+     * @param number The number to compress.
+     * @returns The compressed number as a string.
+     */
+    public compressNumber(number: number): string {
+        let compressedNumber: string = ""
+        while (number > 0) {
+            compressedNumber = BASE64[number % 64] + compressedNumber
+            number = Math.floor( number / 64)
+        }
+        return compressedNumber || BASE64[0]
+    }
+
+    /**
+     * Uncompresses a base64 number.
+     * @param stringNumber The compressed number as a string.
+     * @returns The uncompressed number.
+     */
+    public uncompressNumber(stringNumber: string): number {
+        let number = 0
+        for (let i = 0; i < stringNumber.length; i++) {
+            number = number * 64 + BASE64.indexOf(stringNumber[i])
+        }
+        return number
+    }
+
+// function toBase62(num) {
+//   let encoded = '';
+//   while (num > 0) {
+//     encoded = base62Chars[num % 62] + encoded;
+//     num = Math.floor(num / 62);
+//   }
+//   return encoded || base62Chars[0];
+// }
+
+// function fromBase62(encoded) {
+//   let num = 0;
+//   for (let i = 0; i < encoded.length; i++) {
+//     num = num * 62 + base62Chars.indexOf(encoded[i]);
+//   }
+//   return num;
+// }
 
 }
 
