@@ -51,13 +51,13 @@
             "version": "2.0.0-beta"
         },
         {
-            "uuid": "0f96880d-ed04-42af-895c-703bed8e7aa6",
+            "uuid": "a5a0c35e-5998-4256-b5a8-e2c516cbb169",
             "version": [ 0, 0, 0 ]
         }
     ],
     "rp_dependencies": [
         {
-            "uuid": "a5a0c35e-5998-4256-b5a8-e2c516cbb169",
+            "uuid": "0f96880d-ed04-42af-895c-703bed8e7aa6",
             "version": [ 0, 0, 0 ]
         }
     ]
