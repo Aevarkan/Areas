@@ -9,7 +9,7 @@ rp.inspector.recordWithLocation=%1 ago, %2 %3 %4 at %5.
 rp.inspector.recordNoLocation=%1 ago, %2 %3 %4.
 
 
-rp.inspector.messageHeader=Showing logs %s.
+rp.inspector.messageHeader=Showing records %s.
 rp.inspector.singleLocationLog=for location %1 %2 %3
 rp.inspector.playerLog=for player %s
 rp.inspector.areaLog=for area

@@ -43,7 +43,7 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
         z: blockLocation.z.toString()
     }
 
-    session.sendInspectMessage(messages, DatabaseQueryTypes.SingleLocationLog, false, messageInfo)
+    session.sendInspectMessage(messages, DatabaseQueryTypes.SingleLocationLog, messageInfo)
 })
 
 world.beforeEvents.playerBreakBlock.subscribe(event => {

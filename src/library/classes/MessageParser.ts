@@ -114,7 +114,7 @@ export class MessageParser {
         // Combine the with the header
         const wholeMessage: RawMessage = {
             translate: "inspector.messageHeader",
-            with: messageHeaderBody
+            with: { rawtext: [ messageHeaderBody ] }
         }
 
         // Now add the prefix

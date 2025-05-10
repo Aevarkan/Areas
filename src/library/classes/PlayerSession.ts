@@ -90,7 +90,7 @@ export class PlayerSession {
     /**
      * Sends the player the results of inspect mode.
      */
-    public sendInspectMessage(rawMessages: RawMessage[], logType: DatabaseQueryTypes, includeLocation: boolean, messageInformation: MessageInfo) {
+    public sendInspectMessage(rawMessages: RawMessage[], logType: DatabaseQueryTypes, messageInformation: MessageInfo) {
         
         // Add the message header to the top
         const headerMessage = Utility.RawText.parseMessageHeader(logType, messageInformation)
