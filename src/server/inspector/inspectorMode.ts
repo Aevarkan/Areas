@@ -21,6 +21,9 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
     // Don't place blocks in inspector mode
     event.cancel = true
 
+    // We also initialise the block if it's not already
+    Database.Block.safelyInitialiseBlock(event.block)
+
     const currentTime = Date.now()
 
     const block = event.block
@@ -55,6 +58,9 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
     // Don't place blocks in inspector mode
     event.cancel = true
 
+    // We also initialise the block if it's not already
+    Database.Block.safelyInitialiseBlock(event.block)
+
     const currentTime = Date.now()
 
     const block = event.block
@@ -72,8 +78,12 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
     const blockLogs = Database.Block.getBlockRecord(blockLocation, playerQueryOptions)
 
     const messages = Utility.RawText.parseBlockEventRecords(blockLogs, currentTime, false)
-    // player.sendMessage(messages)
-    messages.forEach(message => {
-        player.sendMessage(message)
-    })
+    const messageInfo: MessageInfo = {
+        x: blockLocation.x.toString(),
+        y: blockLocation.y.toString(),
+        z: blockLocation.z.toString()
+    }
+
+    // The inspect message includes prettier formatting
+    session.sendInspectMessage(messages, DatabaseQueryTypes.SingleLocationLog, messageInfo)
 })
