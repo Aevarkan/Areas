@@ -27,7 +27,15 @@ function inspectCommand(origin: CustomCommandOrigin): CustomCommandResult {
     result = { status: CustomCommandStatus.Success }
 
     const session = Areas.getPlayerSession(player)
+
+    // Set inspector mode and send the player a message
     session.inspectorEnabled = !session.inspectorEnabled
+    if (session.inspectorEnabled) {
+        session.sendAreasMessage("inspector.on")
+    } else {
+        session.sendAreasMessage("inspector.off")
+    }
+    
 
     return result
 }

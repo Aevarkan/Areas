@@ -47,13 +47,14 @@ export class MessageParser {
     /**
      * Adds the Areas addon prefix to a RawMessage.
      * @param message The message to add a prefix to.
+     * @param prefixIndex The prefix to use, defined in `config`.
      * @returns A raw message with the prefix added.
      */
-    public addPrefix(message: RawMessage) {
+    public addPrefix(message: RawMessage, prefixIndex: number) {
         const newMessage: RawMessage = {
             translate: "areas.combine2",
             with: { rawtext: [
-                { text: config.messagePrefix },
+                { text: config.messagePrefix[prefixIndex] },
                 message
             ]}
         }
@@ -118,7 +119,7 @@ export class MessageParser {
         }
 
         // Now add the prefix
-        const completeMessage = this.addPrefix(wholeMessage)
+        const completeMessage = this.addPrefix(wholeMessage, 0)
         return completeMessage
     }
 

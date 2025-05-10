@@ -69,6 +69,9 @@ export class PlayerSession {
 
     /**
      * Sends the player the results of inspect mode.
+     * @param rawMessages The fully formatted inspect mode raw messages.
+     * @param logType The type of query to show records for.
+     * @param messageInformation Additional information associated with the log type.
      */
     public sendInspectMessage(rawMessages: RawMessage[], logType: DatabaseQueryTypes, messageInformation: MessageInfo) {
         
@@ -76,8 +79,36 @@ export class PlayerSession {
         const headerMessage = Utility.RawText.parseMessageHeader(logType, messageInformation)
         rawMessages.unshift(headerMessage)
 
+        // Add the message footer to the bottom
+        const footerMessageNoPrefix: RawMessage = {
+            translate: "inspector.messageFooter"
+        }
+        const footerMessage = Utility.RawText.addPrefix(footerMessageNoPrefix, 1)
+        rawMessages.push(footerMessage)
+
         rawMessages.forEach(message => {
             this.player.sendMessage(message)
         })
+    }
+
+    /**
+     * Sends the player a message with the addon's prefix.
+     * @param message The localisation string of the message or a {@link RawMessage}.
+     * @remarks The localisation string cannot have substitution markers (anything with %s).
+     * @remarks Example string id: `inspector.recordNoEntityCause`
+     */
+    public sendAreasMessage(message: string | RawMessage) {
+
+        let rawMessage: RawMessage
+        if (typeof message === "string") {
+            rawMessage = { translate: message }
+        } else {
+            rawMessage = message
+        }
+        
+
+        const completeMessage = Utility.RawText.addPrefix(rawMessage, 0)
+
+        this.player.sendMessage(completeMessage)
     }
 }

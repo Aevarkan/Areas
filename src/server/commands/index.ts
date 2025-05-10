@@ -5,4 +5,5 @@
  * Author: Aevarkan
  */
 
+import "./checkStorage"
 import "./inspect"

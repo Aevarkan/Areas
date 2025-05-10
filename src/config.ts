@@ -40,8 +40,9 @@ export default {
     log: false,
     /**
      * The prefix that will appear in front of every message.
+     * @remarks The second prefix only appears at the end of many messages (e.g. when showing logs).
      */
-    messagePrefix: "\u00A7s\u00A7lAreas >>\u00A7r ",
+    messagePrefix: ["\u00A7s\u00A7lAreas >>\u00A7r ", "\u00A7s\u00A7lAreas <<\u00A7r "],
     /**
      * The command permission level required to do commands.
      * @remarks Set this to `CommandPermissionLevel.Any` to let anyone run commands.

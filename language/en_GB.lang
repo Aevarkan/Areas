@@ -9,11 +9,15 @@ rp.inspector.recordWithLocation=%1 ago, %2 %3 %4 at %5.
 rp.inspector.recordNoLocation=%1 ago, %2 %3 %4.
 
 
+rp.inspector.on=Inspector mode enabled.
+rp.inspector.off=Inspector mode disabled.
+
 rp.inspector.messageHeader=Showing records %s.
 rp.inspector.singleLocationLog=for location %1 %2 %3
 rp.inspector.playerLog=for player %s
 rp.inspector.areaLog=for area
 rp.inspector.entityCauseLog=caused by %s
+rp.inspector.messageFooter=End of records.
 
 # We say the world did it if no entity was there.
 rp.inspector.recordNoEntityCause=WORLD
