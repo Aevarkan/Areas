@@ -38,7 +38,7 @@ world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
 })
 
 // Checks if a block is initialised, if not, then initialise
-world.beforeEvents.playerBreakBlock.subscribe(event => {
+world.beforeEvents.playerPlaceBlock.subscribe(event => {
 
     // Don't log if the player is in inspector mode
     const session = Areas.getPlayerSession(event.player)
