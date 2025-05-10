@@ -53,6 +53,9 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
             Database.Block.removeLoggedEvent(time, blockLocation)
         }
 
+        // And deinitialise it (no need for an if statement like above as it's already safe)
+        Database.Block.safelyDeinitialiseBlock(blockSnapshot)
+
     }, 1)
 })
 
@@ -86,6 +89,9 @@ world.beforeEvents.explosion.subscribe((event) => {
                 Database.Block.removeLoggedEvent(time, blockSnapshot)
             }
     
+            // And deinitialise it (no need for an if statement like above as it's already safe)
+            Database.Block.safelyDeinitialiseBlock(blockSnapshot)
+
         })
 
     }, 1)

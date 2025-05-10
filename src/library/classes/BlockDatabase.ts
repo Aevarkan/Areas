@@ -260,6 +260,32 @@ export class BlockDatabase {
         world.setDynamicProperty(key, value)
     }
 
+    public safelyDeinitialiseBlock(block: BlockSnapshot) {
+
+        // We can't deinitialise a non existent record
+        if (!(this.isBlockInitialised(block))) return
+
+        // We get every record
+        const records = this.getBlockRecord(block, undefined)
+
+        // If there's more than 1 record, we can't deinitialise it.
+        if (records.length > 1) return
+
+        // The danger is removing a initialisation record when the block is different, we check this now.
+        const record = records[0]
+        if (block.typeId !== record.typeId) return
+
+        // Really check that the record is the initial one
+        // This should never trigger as a normal record isn't ever created without an initial one.
+        if (record.time !== 0) return
+
+        // Now this is just getting paranoid
+        if (record.interaction !== BlockInteractionTypes.BlockInitialise) return
+
+        // Now we can be sure nothing has ever happened to this block
+        this.removeLoggedEvent(0, block)
+    }
+
     /**
      * Gets the blockevent records for the whole world.
      * @param queryOptions Options on what to filter by.
@@ -309,7 +335,7 @@ export class BlockDatabase {
      * @param queryOptions Options on what to filter by.
      * @returns Block event records for the location, sorted by oldest to newest.
      */
-    public getBlockRecord(blockLocation: DimensionLocation, queryOptions: BlockRecordQueryOptions): BlockEventRecord[] {
+    public getBlockRecord(blockLocation: DimensionLocation, queryOptions?: BlockRecordQueryOptions): BlockEventRecord[] {
         const blockRecordKeys = this.getBlockRecordKeys()
         const keyObjects = this.unserialiseBlockRecordKeys(blockRecordKeys)
 
