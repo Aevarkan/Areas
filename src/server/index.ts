@@ -11,3 +11,5 @@ import "./logger/entityDie"
 import "./logger/playerName"
 
 import "./inspector/inspectorMode"
+
+import "./commands/inspect"
