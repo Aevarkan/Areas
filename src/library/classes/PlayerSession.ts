@@ -96,6 +96,8 @@ export class PlayerSession {
         const headerMessage = Utility.RawText.parseMessageHeader(logType, messageInformation)
         rawMessages.unshift(headerMessage)
 
-        this.player.sendMessage(rawMessages)
+        rawMessages.forEach(message => {
+            this.player.sendMessage(message)
+        })
     }
 }
