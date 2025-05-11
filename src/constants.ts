@@ -9,4 +9,4 @@
 export const CURRENT_VERSION = "v{{VERSION}}"
 
 // For compressing numbers 
-export const BASE64 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+=';
+export const BASE64 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/"

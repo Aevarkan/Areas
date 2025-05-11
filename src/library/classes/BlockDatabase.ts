@@ -523,6 +523,10 @@ export class BlockDatabase {
             location: blockLocation
         }
 
+        // Testing serialisation
+        console.log("Serialised: " + key)
+        console.log("Unserialised: " + time + " x: " + blockX + " y: " + blockY + " z: " + blockZ)
+
         return keyRecord
     }
 
