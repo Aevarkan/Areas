@@ -524,8 +524,8 @@ export class BlockDatabase {
         }
 
         // Testing serialisation
-        console.log("Serialised: " + key)
-        console.log("Unserialised: " + time + " x: " + blockX + " y: " + blockY + " z: " + blockZ)
+        // console.log("Serialised: " + key)
+        // console.log("Unserialised: " + time + " x: " + blockX + " y: " + blockY + " z: " + blockZ)
 
         return keyRecord
     }
