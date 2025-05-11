@@ -86,7 +86,7 @@ export class BlockDatabase {
         const blockX = Utility.compressNumber(blockLocation.x)
         const blockY = Utility.compressNumber(blockLocation.y)
         const blockZ = Utility.compressNumber(blockLocation.z)
-        const blockDimension = blockLocation.dimension.id
+        const blockDimension = Utility.compressDimension(blockLocation.dimension.id)
 
         if (
             BLOCK_EVENT_PREFIX.includes(".") ||
@@ -506,7 +506,7 @@ export class BlockDatabase {
         const blockX = Utility.uncompressNumber(parts[2])
         const blockY = Utility.uncompressNumber(parts[3])
         const blockZ = Utility.uncompressNumber(parts[4])
-        const blockDimensionString = parts[5]
+        const blockDimensionString = Utility.uncompressDimension(parts[5])
 
         const blockDimension = world.getDimension(blockDimensionString)
 

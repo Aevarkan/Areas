@@ -8,7 +8,7 @@
 import { Block, BlockComponent, BlockComponentTypes, DimensionLocation, RawMessage } from "@minecraft/server";
 import { BlockEventRecord } from "library/definitions/record";
 import { BlockSnapshot } from "./BlockSnapshot";
-import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
+import { MinecraftBlockTypes, MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import { TimeUtilityFunctions } from "./TimeUtility";
 import { MessageParser } from "./MessageParser";
 import { BASE64 } from "constants";
@@ -42,6 +42,16 @@ const blocksWithNBT = [
     MinecraftBlockTypes.YellowShulkerBox
 ] as string[]
 
+const areasDimensionMap: Record<MinecraftDimensionTypes, string> = {
+    [MinecraftDimensionTypes.Overworld]: "1",
+    [MinecraftDimensionTypes.Nether]: "2",
+    [MinecraftDimensionTypes.TheEnd]: "3"
+}
+
+const reverseAreasDimensionMap = Object.fromEntries(
+    Object.entries(areasDimensionMap).map(([key, value]) => [value, key])
+)
+
 class UtilityFunctions {
     
     Time: TimeUtilityFunctions
@@ -50,6 +60,26 @@ class UtilityFunctions {
     constructor() {
         this.Time = new TimeUtilityFunctions()
         this.RawText = new MessageParser()
+    }
+
+    /**
+     * Compresses dimensions for smaller storage.
+     * @param dimensionId The dimension, e.g. `minecraft:overworld`.
+     * @returns The compressed dimension code.
+     * @remarks Modded dimensions will have to be added manually, they're not compressed by default.
+     */
+    public compressDimension(dimensionId: MinecraftDimensionTypes | string): string {
+        return areasDimensionMap[dimensionId] ?? dimensionId
+    }
+
+    /**
+     * Uncompresses a stored dimension id.
+     * @param dimensionId The stored dimension id.
+     * @returns The original dimension id.
+     * @remarks Modded dimensions will have to be added manually, they're not compressed by default.
+     */
+    public uncompressDimension(dimensionId: string): string {
+        return reverseAreasDimensionMap[dimensionId] ?? dimensionId
     }
 
     /**
