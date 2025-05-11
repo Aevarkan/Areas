@@ -96,3 +96,5 @@ world.beforeEvents.explosion.subscribe((event) => {
 
     }, 1)
 })
+
+console.log("Block break listener active.")

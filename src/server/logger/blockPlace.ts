@@ -47,3 +47,5 @@ world.beforeEvents.playerPlaceBlock.subscribe(event => {
     const block = event.block
     Database.Block.safelyInitialiseBlock(block)
 })
+
+console.log("Block place listener active.")

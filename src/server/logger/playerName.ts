@@ -12,3 +12,5 @@ import { Database } from "library/classes/AreasDatabase";
 world.afterEvents.playerSpawn.subscribe(event => {
     Database.Names.savePlayerRecord(event.player)
 })
+
+console.log("Playe name database active.")
