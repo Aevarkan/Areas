@@ -6,11 +6,11 @@
  */
 
 import { world } from "@minecraft/server";
-import { Database } from "library/classes/AreasDatabase";
+import { Areas } from "library/classes/AreasSystem";
 
 // Grabs a player's name when they spawn in
 world.afterEvents.playerSpawn.subscribe(event => {
-    Database.Names.savePlayerRecord(event.player)
+    Areas.Database.Names.savePlayerRecord(event.player)
 })
 
-console.log("Playe name database active.")
+// console.log("Player name database active.")

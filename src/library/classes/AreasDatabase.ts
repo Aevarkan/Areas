@@ -13,7 +13,7 @@ import { PlayerNameDatabase } from "./PlayerName";
 /**
  * General class for database handling.
  */
-class AreasDatabase {
+export class AreasDatabase {
 
     /**
      * The entity event database.
@@ -53,5 +53,3 @@ class AreasDatabase {
     }
 
 }
-
-export const Database = new AreasDatabase()

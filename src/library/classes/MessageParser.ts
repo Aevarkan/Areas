@@ -13,10 +13,10 @@ import { TimeIntervalUnit, TimeUnit } from "./TimeUtility";
 import { RawMessageParseError } from "./Errors";
 import { Dimension, DimensionLocation, DimensionTypes, RawMessage } from "@minecraft/server";
 import { BlockInteractionTypes, DatabaseEntityTypes, DatabaseQueryTypes } from "library/definitions/areasWorld";
-import { Database } from "./AreasDatabase";
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import config from "config";
 import { MessageInfo } from "library/definitions/rawMessages";
+import { Areas } from "./AreasSystem";
 
 // This is just so the colours change each line
 const nonRolledBackFormats = config.recordFormatCode.length
@@ -289,7 +289,7 @@ export class MessageParser {
                 break
 
             case DatabaseEntityTypes.Player:
-                const playerName = Database.Names.getPlayerName(playerId)
+                const playerName = Areas.Database.Names.getPlayerName(playerId)
                 parsedEntityCause = { text: playerName }
                 break
 

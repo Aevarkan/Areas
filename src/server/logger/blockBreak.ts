@@ -5,12 +5,9 @@
  * Author: Aevarkan
  */
 
-import { Block, DimensionLocation, system, Vector3, world } from "@minecraft/server";
-import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
-import { Database } from "library/classes/AreasDatabase";
+import { DimensionLocation, system, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
-import { PlayerSession } from "library/classes/PlayerSession";
 import { Utility } from "library/classes/Utility";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
@@ -40,8 +37,8 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
     // const item = block.getItemStack()
     // const struct = world.structureManager.createFromWorld()
 
-    Database.Block.safelyInitialiseBlock(blockSnapshot)
-    Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockBroken, player)
+    Areas.Database.Block.safelyInitialiseBlock(blockSnapshot)
+    Areas.Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockBroken, player)
 
     // We wait a tick to see if the block actually changes
     // If the block is still there, then remove the entry
@@ -52,7 +49,7 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
 
         // Remove the log if nothing happens
         if (blockSnapshot.typeId === newBlockTypeId) {
-            Database.Block.removeLoggedEvent(time, blockLocation)
+            Areas.Database.Block.removeLoggedEvent(time, blockLocation)
         }
 
         // This uses way too much performance, we'll just need to take the storage hit.
@@ -79,8 +76,8 @@ world.beforeEvents.explosion.subscribe((event) => {
         const blockSnapshot = new BlockSnapshot(block)
         blockSnapshots.push(blockSnapshot)
 
-        Database.Block.safelyInitialiseBlock(blockSnapshot)
-        Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
+        Areas.Database.Block.safelyInitialiseBlock(blockSnapshot)
+        Areas.Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockExploded, entity)
     })
 
     // Check if the explosion caused any damage 1 tick later
@@ -92,7 +89,7 @@ world.beforeEvents.explosion.subscribe((event) => {
     
             // Remove the log if nothing happens
             if (blockSnapshot.typeId === newBlockTypeId) {
-                Database.Block.removeLoggedEvent(time, blockSnapshot)
+                Areas.Database.Block.removeLoggedEvent(time, blockSnapshot)
             }
     
             // This uses way too much performance, we'll just need to take the storage hit.
@@ -104,4 +101,4 @@ world.beforeEvents.explosion.subscribe((event) => {
     }, 1)
 })
 
-console.log("Block break listener active.")
+// console.log("Block break listener active.")

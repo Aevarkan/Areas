@@ -7,7 +7,6 @@
 
 import { CommandPermissionLevel, CustomCommand, CustomCommandOrigin, CustomCommandResult, CustomCommandStatus, Player, RawMessage, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
-import { Commands } from "library/classes/CommandRegister";
 
 const checkStorageCustomCommand: CustomCommand = {
     description: "Shows the storage usage of Areas.",
@@ -37,4 +36,4 @@ function checkStorage(origin: CustomCommandOrigin): CustomCommandResult {
     return result
 }
 
-Commands.registerCommand(checkStorageCustomCommand, checkStorage)
+Areas.Commands.registerCommand(checkStorageCustomCommand, checkStorage)

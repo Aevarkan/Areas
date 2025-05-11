@@ -7,7 +7,6 @@
 
 import { CommandPermissionLevel, CustomCommand, CustomCommandOrigin, CustomCommandResult, CustomCommandStatus, Player, system, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
-import { Commands } from "library/classes/CommandRegister";
 
 const inspectCustomCommand: CustomCommand = {
     description: "Toggles inspect mode.",
@@ -40,4 +39,4 @@ function inspectCommand(origin: CustomCommandOrigin): CustomCommandResult {
     return result
 }
 
-Commands.registerCommand(inspectCustomCommand, inspectCommand)
+Areas.Commands.registerCommand(inspectCustomCommand, inspectCommand)

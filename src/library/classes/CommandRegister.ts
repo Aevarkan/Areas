@@ -5,12 +5,10 @@
  * Author: Aevarkan
  */
 
-import { CustomCommand, CustomCommandOrigin, CustomCommandResult, system } from "@minecraft/server";
+import { CustomCommand, CustomCommandOrigin, CustomCommandResult } from "@minecraft/server";
 import { CustomCommandPair } from "library/definitions/customCommands";
 
-let _commandHandler: CustomCommandHandler
-
-class CommandRegister {
+export class CommandRegister {
 
     private commandsToRegister: CustomCommandPair[] = []
 
@@ -34,29 +32,3 @@ class CommandRegister {
     }
 
 }
-
-export const Commands = new CommandRegister()
-
-class CustomCommandHandler {
-
-    private commandRegister: CommandRegister
-
-    constructor() {
-        this.commandRegister = Commands
-        this.registerCommands()
-    }
-
-    private registerCommands() {
-        system.beforeEvents.startup.subscribe(event => {
-            const commandRegister = event.customCommandRegistry
-
-            // Register each command put in the register
-            this.commandRegister.getCommands().forEach(commandPair => {
-                commandRegister.registerCommand(commandPair.command, commandPair.callbackFunction)
-            })
-            
-        })
-    }
-}
-
-_commandHandler = new CustomCommandHandler()
