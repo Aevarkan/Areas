@@ -6,6 +6,7 @@
  */
 
 import { Block, DimensionLocation, system, Vector3, world } from "@minecraft/server";
+import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 import { Database } from "library/classes/AreasDatabase";
 import { Areas } from "library/classes/AreasSystem";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
@@ -68,6 +69,9 @@ world.beforeEvents.explosion.subscribe((event) => {
     const affectedBlocks = event.getImpactedBlocks()
     const dimension = event.dimension
     const entity = event.source
+
+    // We do not log air, it's not changed by explosions and saves a lot of space by not doing it!
+    affectedBlocks.filter(block => block.typeId !== MinecraftBlockTypes.Air)
 
     const blockSnapshots = [] as BlockSnapshot[]
     affectedBlocks.forEach(block => {
