@@ -11,6 +11,7 @@ import { Database } from "library/classes/AreasDatabase";
 import { Areas } from "library/classes/AreasSystem";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
 import { PlayerSession } from "library/classes/PlayerSession";
+import { Utility } from "library/classes/Utility";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 // We cannot use after events, this is because the block is already destroyed.
@@ -70,8 +71,8 @@ world.beforeEvents.explosion.subscribe((event) => {
     const dimension = event.dimension
     const entity = event.source
 
-    // We do not log air, it's not changed by explosions and saves a lot of space by not doing it!
-    affectedBlocks.filter(block => block.typeId !== MinecraftBlockTypes.Air)
+    // We do not log fluid blocks, they're not changed by explosions and saves a lot of space by not doing it!
+    affectedBlocks.filter(block => Utility.isFluidBlock(block))
 
     const blockSnapshots = [] as BlockSnapshot[]
     affectedBlocks.forEach(block => {

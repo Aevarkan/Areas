@@ -129,6 +129,29 @@ class UtilityFunctions {
     }
 
     /**
+     * Checks if a block is a fluid (e.g. air, water)
+     * @param block The block to check
+     * @return `true` if the block is a fluid, otherwise `false`.
+     */
+    public isFluidBlock(block: BlockSnapshot) {
+        const typeId = block.typeId
+        
+        let isFluid = false
+
+        if (
+            typeId === MinecraftBlockTypes.Air ||
+            typeId === MinecraftBlockTypes.Water ||
+            typeId === MinecraftBlockTypes.FlowingWater ||
+            typeId === MinecraftBlockTypes.Lava ||
+            typeId === MinecraftBlockTypes.FlowingLava
+        ) {
+            isFluid = true
+        }
+
+        return isFluid
+    }
+
+    /**
      * Compresses a number into base64.
      * @param number The number to compress.
      * @returns The compressed number as a string.
