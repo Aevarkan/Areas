@@ -53,8 +53,9 @@ world.beforeEvents.playerBreakBlock.subscribe(({block, dimension, player}) => {
             Database.Block.removeLoggedEvent(time, blockLocation)
         }
 
+        // This uses way too much performance, we'll just need to take the storage hit.
         // And deinitialise it (no need for an if statement like above as it's already safe)
-        Database.Block.safelyDeinitialiseBlock(blockSnapshot)
+        // Database.Block.safelyDeinitialiseBlock(blockSnapshot)
 
     }, 1)
 })
@@ -89,8 +90,9 @@ world.beforeEvents.explosion.subscribe((event) => {
                 Database.Block.removeLoggedEvent(time, blockSnapshot)
             }
     
+            // This uses way too much performance, we'll just need to take the storage hit.
             // And deinitialise it (no need for an if statement like above as it's already safe)
-            Database.Block.safelyDeinitialiseBlock(blockSnapshot)
+            // Database.Block.safelyDeinitialiseBlock(blockSnapshot)
 
         })
 
