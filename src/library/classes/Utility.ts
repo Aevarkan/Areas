@@ -135,11 +135,17 @@ class UtilityFunctions {
      */
     public compressNumber(number: number): string {
         let compressedNumber: string = ""
+
+        const isNegativeNumber = number < 0 // This caused so many problems before I found out
+        number = Math.abs(number)
+
         while (number > 0) {
             compressedNumber = BASE64[number % 64] + compressedNumber
             number = Math.floor( number / 64)
         }
-        return compressedNumber || BASE64[0]
+
+        const stringNumber = (isNegativeNumber ? "-" : "") + compressedNumber || BASE64[0]
+        return stringNumber
     }
 
     /**
@@ -149,10 +155,14 @@ class UtilityFunctions {
      */
     public uncompressNumber(stringNumber: string): number {
         let number = 0
-        for (let i = 0; i < stringNumber.length; i++) {
-            number = number * 64 + BASE64.indexOf(stringNumber[i])
+        const isNegative = stringNumber.startsWith("-");
+        const base64Digits = isNegative ? stringNumber.slice(1) : stringNumber
+
+        for (const char of base64Digits) {
+            number = number * 64 + BASE64.indexOf(char)
         }
-        return number
+
+        return isNegative ? -number : number
     }
 
 // function toBase62(num) {
