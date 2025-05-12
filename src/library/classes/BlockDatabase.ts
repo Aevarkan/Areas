@@ -21,7 +21,7 @@ const BLOCK_EVENT_PREFIX = "b" // We really need to conserve space
 export class BlockDatabase {
 
     /**
-     * Logs an block event (e.g. Broken block) to the database.
+     * Logs a block event (e.g. Broken block) to the database.
      * @param time The unix time of this event happening.
      * @param block The block affected by the interaction.
      * @param interaction The type of interaction.
