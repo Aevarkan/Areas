@@ -12,8 +12,8 @@
         "rp_description": "pack.description",
         "bp_name": "pack.name",
         "rp_name": "pack.name",
-        "bp_uuid": "e0a2eeaf-059f-4eba-bf8e-ce7fbb86aaef",
-        "rp_uuid": "ea4bb0ec-191c-4bab-a741-c4f0f301eeba",
+        "bp_uuid": "0f96880d-ed04-42af-895c-703bed8e7aa6",
+        "rp_uuid": "a5a0c35e-5998-4256-b5a8-e2c516cbb169",
         "comments": "VERSION AND MIN ENGINE VERSION ARE UPDATED IN THE PYTHON SCRIPT!!!",
         "version": [ 0, 0, 0 ],
         "min_engine_version": [ 0, 0, 0 ]
@@ -22,11 +22,11 @@
         {
             "description": "pack.description",
             "type": "data",
-            "uuid": "6819db33-c2d7-45e2-b097-b22c4d377198",
+            "uuid": "fdc09267-856f-4f92-9d23-f0611aa15fbe",
             "version": [1, 0, 0]
         },
         {
-            "uuid": "280232d4-f31d-4849-a42c-ce77e6870e30",
+            "uuid": "ae3f5dc0-de92-42fb-a890-62670ae724af",
             "version": [1, 0, 0],
             "type": "script",
             "language": "javascript",
@@ -37,27 +37,27 @@
         {
             "description": "pack.description",
             "type": "resources",
-            "uuid": "f7f266ce-74e9-4226-9c34-ee87886d1b47",
+            "uuid": "8b41f3e3-ca1d-4679-a75f-2f1be37ed339",
             "version": [1, 0, 0]
         }
     ],
     "bp_dependencies": [
         {
             "module_name": "@minecraft/server",
-            "version": "1.18.0"
+            "version": "2.0.0-beta"
         },
         {
             "module_name": "@minecraft/server-ui",
-            "version": "1.3.0"
+            "version": "2.0.0-beta"
         },
         {
-            "uuid": "e0a2eeaf-059f-4eba-bf8e-ce7fbb86aaef",
+            "uuid": "a5a0c35e-5998-4256-b5a8-e2c516cbb169",
             "version": [ 0, 0, 0 ]
         }
     ],
     "rp_dependencies": [
         {
-            "uuid": "ea4bb0ec-191c-4bab-a741-c4f0f301eeba",
+            "uuid": "0f96880d-ed04-42af-895c-703bed8e7aa6",
             "version": [ 0, 0, 0 ]
         }
     ]

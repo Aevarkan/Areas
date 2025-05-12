@@ -5,28 +5,33 @@
  * Author: Aevarkan
  */
 
-import { DimensionLocation, world } from "@minecraft/server";
-import { BlockInteractionTypes, Database } from "library/classes/BlockDatabase";
+import { world } from "@minecraft/server";
+import { Areas } from "library/classes/AreasSystem";
+import { BlockSnapshot } from "library/classes/BlockSnapshot";
+import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
-// We cannot use before events, this is because the block is already placed.
-// For rollback, we're assuming all blocks were placed on air.
-// Either that or rollbacks aren't allowed to initial state
-// Could possibly initialise the world by getting an initial state of all blocks
-// Should do this with a command areas:init <radius>
-// You'd then have to run this command continually
-// Ticking area?? Then have all blocks in a radius around players
-// This could be automated, no player input, or make them put a command block that runs the command for every player
-// I don't know the performance impacts, since this will save a dynamic property for EVERY block
-// This will be much easier once the beforeEvent comes out of experimental
-// It saves the block that is there before the new block is placed
+world.afterEvents.playerPlaceBlock.subscribe(({block, player}) => {
 
-world.afterEvents.playerPlaceBlock.subscribe(({block, player, dimension}) => {
-    const location: DimensionLocation = {
-        x: block.location.x,
-        y: block.location.y,
-        z: block.location.z,
-        dimension: dimension
-    }
+    // Don't log if the player is in inspector mode
+    // This shouldn't even trigger as its an after event
+    // Inspector mode doesn't allow block placement anyway
+    const session = Areas.getPlayerSession(player)
+    if (session.inspectorEnabled) return
 
-    Database.addEntry(block, BlockInteractionTypes.BlockPlaced, location, player)
+    const blockSnapshot = new BlockSnapshot(block)
+    const time = Date.now()
+    Areas.Database.Block.logBlockEvent(time, blockSnapshot, BlockInteractionTypes.BlockPlaced, player)
 })
+
+// Checks if a block is initialised, if not, then initialise
+world.beforeEvents.playerPlaceBlock.subscribe(event => {
+
+    // Don't log if the player is in inspector mode
+    const session = Areas.getPlayerSession(event.player)
+    if (session.inspectorEnabled) return
+
+    const block = event.block
+    Areas.Database.Block.safelyInitialiseBlock(block)
+})
+
+// console.log("Block place listener active.")
