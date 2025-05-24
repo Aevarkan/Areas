@@ -72,6 +72,7 @@ export class PlayerSession {
      * @param rawMessages The fully formatted inspect mode raw messages.
      * @param logType The type of query to show records for.
      * @param messageInformation Additional information associated with the log type.
+     * @remarks Headers and footers should not be included in the array.
      */
     public sendInspectMessage(rawMessages: RawMessage[], logType: DatabaseQueryTypes, messageInformation: MessageInfo) {
         
