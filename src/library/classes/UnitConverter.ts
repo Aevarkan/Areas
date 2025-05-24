@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { MILLISECONDS_DAY, MILLISECONDS_HOUR, MILLISECONDS_MINUTE, MILLISECONDS_MONTH, MILLISECONDS_SECOND, MILLISECONDS_YEAR } from "constants"
+import { BYTES_GIGABYTE, BYTES_KILOBYTE, BYTES_MEGABYTE, BYTES_TERABYTE, MILLISECONDS_DAY, MILLISECONDS_HOUR, MILLISECONDS_MINUTE, MILLISECONDS_MONTH, MILLISECONDS_SECOND, MILLISECONDS_YEAR } from "constants"
 import { CalculationError } from "./Errors"
 
 /**
@@ -41,17 +41,18 @@ export enum StorageUnit {
     Byte,
     Kilobyte,
     Megabyte,
-    Gigabyte
+    Gigabyte,
+    Terabyte // You are screwed if this shows up
 }
 
 export interface StorageInfo {
     /**
-     * The largest interval of time this unit spans.
+     * The largest storage unit.
      * @remarks Is human readable.
      */
     largestUnit: StorageUnit,
     /**
-     * The quantity of the largest unit.
+     * The quantity of the largest storage unit.
      * @remarks Rounded to one decimal point.
      */
     largestUnitAmount: number,
@@ -163,12 +164,68 @@ export class UnitConverter {
 
     /**
      * 
-     * Bytes
+     * Storage Units
      * 
      */
 
-    private countBytes() {
+    /**
+     * Calculates extra info from a raw byte quantity.
+     * @param bytes The number of bytes.
+     * @returns A {@link StorageInfo} object.
+     */
+    public calculateStorage(bytes: number): StorageInfo {
 
+        // Don't know why you'd put a negative number in, but it'd still work
+        bytes = Math.abs(bytes)
+
+        let biggestUnit: StorageUnit = null // It should never return as null
+        if (bytes >= BYTES_TERABYTE) {
+            biggestUnit = StorageUnit.Terabyte
+        } else if (bytes >= BYTES_GIGABYTE) {
+            biggestUnit = StorageUnit.Gigabyte
+        } else if (bytes >= BYTES_MEGABYTE) {
+            biggestUnit = StorageUnit.Megabyte
+        } else if (bytes >= BYTES_KILOBYTE) {
+            biggestUnit = StorageUnit.Kilobyte
+        } else {
+            biggestUnit = StorageUnit.Byte
+        }
+
+        let biggestUnitQuantity: StorageUnit = null
+        switch (biggestUnit) {
+            case StorageUnit.Byte:
+                biggestUnitQuantity = bytes
+                break
+
+            case StorageUnit.Kilobyte:
+                biggestUnitQuantity = bytes / BYTES_KILOBYTE
+                break
+
+            case StorageUnit.Megabyte:
+                biggestUnitQuantity = bytes / BYTES_MEGABYTE
+                break
+
+            case StorageUnit.Gigabyte:
+                biggestUnitQuantity = bytes / BYTES_GIGABYTE
+                break
+
+            case StorageUnit.Terabyte:
+                biggestUnitQuantity = bytes / BYTES_TERABYTE
+                break
+
+            default:
+                throw new CalculationError("Storage calculation error.")
+        }
+
+        // 1 decimal point
+        const roundedBiggestUnitQuantity = Math.round(biggestUnitQuantity * 10) / 10
+        const storageInfo: StorageInfo = {
+            bytes: bytes,
+            largestUnit: biggestUnit,
+            largestUnitAmount: roundedBiggestUnitQuantity
+        }
+
+        return storageInfo
     }
 
 }

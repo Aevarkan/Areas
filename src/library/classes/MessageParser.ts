@@ -9,7 +9,7 @@
 
 import { BlockEventRecord } from "library/definitions/record";
 import { Utility } from "./Utility";
-import { TimeInfo, TimeUnit } from "./UnitConverter";
+import { StorageInfo, StorageUnit, TimeInfo, TimeUnit } from "./UnitConverter";
 import { RawMessageParseError } from "./Errors";
 import { DimensionLocation, RawMessage } from "@minecraft/server";
 import { BlockInteractionTypes, DatabaseEntityTypes, DatabaseQueryTypes } from "library/definitions/areasWorld";
@@ -257,10 +257,48 @@ export class MessageParser {
                 break
 
             default:
-                throw new RawMessageParseError("Block event record parsed incorrectly!")
+                throw new RawMessageParseError("Block event record parsed incorrectly.")
         }
         
         return parsedTimeMessage
+    }
+
+    /**
+     * Parses storage size into a rawmessage.
+     * @param storage The storage info object.
+     * @returns The parsed rawmessage.
+     */
+    parseStorage(storage: StorageInfo): RawMessage {
+        const { largestUnit } = storage
+        const largestUnitAmount = storage.largestUnitAmount.toString()
+
+        let parsedStorageMessage: RawMessage = null
+        switch (largestUnit) {
+            case StorageUnit.Byte:
+                parsedStorageMessage = { translate: "storage.bytesShort", with: [largestUnitAmount] }
+                break
+
+            case StorageUnit.Kilobyte:
+                parsedStorageMessage = { translate: "storage.kibibytesShort", with: [largestUnitAmount] }
+                break
+
+            case StorageUnit.Megabyte:
+                parsedStorageMessage = { translate: "storage.mebibytesShort", with: [largestUnitAmount] }
+                break
+
+            case StorageUnit.Gigabyte:
+                parsedStorageMessage = { translate: "storage.gibibytesShort", with: [largestUnitAmount] }
+                break
+
+            case StorageUnit.Terabyte:
+                parsedStorageMessage = { translate: "storage.tebibytesShort", with: [largestUnitAmount] }
+                break
+        
+            default:
+                throw new RawMessageParseError("Storage info parsed incorrectly.")
+        }
+
+        return parsedStorageMessage
     }
 
     /**

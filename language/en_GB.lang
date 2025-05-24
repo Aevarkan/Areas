@@ -39,5 +39,16 @@ areas.dimensionLocation=%1 in %2
 date.yearsPlural=%s years
 date.monthsPlural=%s months
 
+storage.bytes=%s bytes
+storage.bytesShort=%s B
+storage.kibibytes=%s kibibytes
+storage.kibibytesShort=%s KiB
+storage.mebibytes=%s mebibytes
+storage.mebibytesShort=%s MiB
+storage.gibibytes=%s gibibytes
+storage.gibibytesShort=%s GiB
+storage.tebibytes=%s tebibytes
+storage.tebibytesShort=%s TiB
+
 areas.unknown=Unknown
 areas.combine2=%1%2

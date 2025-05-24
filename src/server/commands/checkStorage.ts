@@ -5,8 +5,9 @@
  * Author: Aevarkan
  */
 
-import { CommandPermissionLevel, CustomCommand, CustomCommandOrigin, CustomCommandResult, CustomCommandStatus, Player, RawMessage, world } from "@minecraft/server";
+import { CommandPermissionLevel, CustomCommand, CustomCommandOrigin, CustomCommandResult, CustomCommandStatus, Player, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
+import { Utility } from "library/classes/Utility";
 
 const checkStorageCustomCommand: CustomCommand = {
     description: "Shows the storage usage of Areas.",
@@ -29,7 +30,8 @@ function checkStorage(origin: CustomCommandOrigin): CustomCommandResult {
     
     // Redo this later to have nicer formatting
     const storageUsage = world.getDynamicPropertyTotalByteCount()
-    const storageMessage: RawMessage = { text: storageUsage.toString() }
+    const storageInfo = Utility.Units.calculateStorage(storageUsage)
+    const storageMessage = Utility.RawText.parseStorage(storageInfo)
 
     session.sendAreasMessage(storageMessage)
     
