@@ -128,9 +128,12 @@ def split_lang_files(language_dir, bp_path, rp_path):
                         if key_part.startswith("bp."):
                             shortened_key = key_part[3:]  # Remove the "bp." prefix
                             bp_file.write(f"{shortened_key}={value_part}\n")
-                        elif key_part.startswith("rp."):
-                            shortened_key = key_part[3:]  # Remove the "rp." prefix
-                            rp_file.write(f"{shortened_key}={value_part}\n")
+                        elif key_part.startswith("#"):
+                            break # Do Nothing
+                        else:
+                            # shortened_key = key_part[3:]  # Remove the "rp." prefix
+                            shortened_key = key_part
+                            rp_file.write(f"{key_part}={value_part}\n")
 
             print(f"Processed {filename}")
 
