@@ -9,9 +9,9 @@
 
 import { BlockEventRecord } from "library/definitions/record";
 import { Utility } from "./Utility";
-import { TimeIntervalUnit, TimeUnit } from "./TimeUtility";
+import { TimeInfo, TimeUnit } from "./UnitConverter";
 import { RawMessageParseError } from "./Errors";
-import { Dimension, DimensionLocation, DimensionTypes, RawMessage } from "@minecraft/server";
+import { DimensionLocation, RawMessage } from "@minecraft/server";
 import { BlockInteractionTypes, DatabaseEntityTypes, DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import config from "config";
@@ -130,7 +130,7 @@ export class MessageParser {
      * @remarks Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100 in nether.
      */
     public parseBlockEventRecord(record: BlockEventRecord, currentTime: number, includeLocation: boolean): RawMessage {
-        const timeDiference = Utility.Time.difference(currentTime, record.time)
+        const timeDiference = Utility.Units.timeDifference(currentTime, record.time)
         
         // Parse the time into human readable string
         const timeMessagePart = this.parseTime(timeDiference)
@@ -226,33 +226,33 @@ export class MessageParser {
      * @param time The time unit.
      * @returns A raw message string.
      */
-    private parseTime(time: TimeUnit): RawMessage {
+    private parseTime(time: TimeInfo): RawMessage {
         const intervalUnit = time.biggestInterval
         const intervals = time.biggestIntervals.toString()
 
         let parsedTimeMessage: RawMessage
         switch (intervalUnit) {
-            case TimeIntervalUnit.Years:
+            case TimeUnit.Years:
                 parsedTimeMessage = { translate: "date.yearsPlural", with: [intervals] } // translation string not in vanilla
                 break
 
-            case TimeIntervalUnit.Months:
+            case TimeUnit.Months:
                 parsedTimeMessage = { translate: "date.monthsPlural", with: [intervals] } // translation string not in vanilla
                 break
 
-            case TimeIntervalUnit.Days:
+            case TimeUnit.Days:
                 parsedTimeMessage = { translate: "date.daysPlural", with: [intervals] }
                 break
 
-            case TimeIntervalUnit.Hours:
+            case TimeUnit.Hours:
                 parsedTimeMessage = { translate: "date.hoursPlural", with: [intervals] }
                 break
 
-            case TimeIntervalUnit.Minutes:
+            case TimeUnit.Minutes:
                 parsedTimeMessage = { translate: "date.minutesPlural", with: [intervals] }
                 break
 
-            case TimeIntervalUnit.Seconds:
+            case TimeUnit.Seconds:
                 parsedTimeMessage = { translate: "date.secondsPlural", with: [intervals] }
                 break
 

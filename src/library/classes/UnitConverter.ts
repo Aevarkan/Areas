@@ -1,16 +1,17 @@
 /**
  * This file is part of Areas which is released under GPL-3.0.
  * See file LICENCE or go to https://www.gnu.org/licenses/gpl-3.0.en.html for full licence details.
- * File: TimeUtility.ts
+ * File: UnitConverter.ts
  * Author: Aevarkan
  */
 
+import { MILLISECONDS_DAY, MILLISECONDS_HOUR, MILLISECONDS_MINUTE, MILLISECONDS_MONTH, MILLISECONDS_SECOND, MILLISECONDS_YEAR } from "constants"
 import { CalculationError } from "./Errors"
 
 /**
  * Human readable time intervals.
  */
-export enum TimeIntervalUnit {
+export enum TimeUnit {
     Years = "years",
     Months = "months",
     Days = "days",
@@ -19,12 +20,12 @@ export enum TimeIntervalUnit {
     Seconds = "seconds",
 }
 
-export interface TimeUnit {
+export interface TimeInfo {
     /**
      * The largest interval of time this unit spans.
      * @remarks Is human readable.
      */
-    biggestInterval: TimeIntervalUnit,
+    biggestInterval: TimeUnit,
     /**
      * The number of intervals of the biggest time unit.
      * @remarks Rounded to one decimal point.
@@ -36,31 +37,48 @@ export interface TimeUnit {
     milliseconds: number,
 }
 
-const millisecondsYear = 31557600000
-const millisecondsMonth = 2629800000
-const millisecondsDay = 86400000
-const millisecondsHour = 3600000
-const millisecondsMinutes = 60000
-const millisecondsSeconds = 1000
+export enum StorageUnit {
+    Byte,
+    Kilobyte,
+    Megabyte,
+    Gigabyte
+}
+
+export interface StorageInfo {
+    /**
+     * The largest interval of time this unit spans.
+     * @remarks Is human readable.
+     */
+    largestUnit: StorageUnit,
+    /**
+     * The quantity of the largest unit.
+     * @remarks Rounded to one decimal point.
+     */
+    largestUnitAmount: number,
+    /**
+     * The raw storage size in bytes.
+     */
+    bytes: number,
+}
 
 /**
  * A whole class for parsing time, because it just takes that much time.
  */
-export class TimeUtilityFunctions {
+export class UnitConverter {
 
     /**
-     * Gets the difference between two times, and outputs it in a .
+     * Gets the difference between two times.
      * @param time1 The first time to compare.
      * @param time2 The second time to compare.
      * @returns a {@link TimeUnit} object.
      * @remarks This will output the absolute difference, disregarding sign.
      */
-    public difference(time1: number, time2: number): TimeUnit {
+    public timeDifference(time1: number, time2: number): TimeInfo {
         const deltaTime = Math.abs(time1 - time2)
         const biggestInterval = this.biggestTimeInterval(deltaTime)
         const intervals = this.countIntervals(deltaTime, biggestInterval)
 
-        const difference: TimeUnit = {
+        const difference: TimeInfo = {
             biggestInterval: biggestInterval,
             biggestIntervals: intervals.intervalsRounded,
             milliseconds: deltaTime
@@ -73,25 +91,25 @@ export class TimeUtilityFunctions {
      * @param time The delta time.
      * @returns A time interval unit: {@link SignificantTimeFigures}
      */
-    private biggestTimeInterval(time: number): TimeIntervalUnit {
+    private biggestTimeInterval(time: number): TimeUnit {
 
         const absoluteTime = Math.abs(time)
         // We divide by the time it takes for each interval.
         // If the answer is less than 1, then it's less than that interval
 
-        let biggestTimeInterval: TimeIntervalUnit = null // It should never return as null
-        if (absoluteTime >= millisecondsYear) {
-            biggestTimeInterval = TimeIntervalUnit.Years
-        } else if (absoluteTime >= millisecondsMonth) {
-            biggestTimeInterval = TimeIntervalUnit.Months
-        } else if (absoluteTime >= millisecondsDay) {
-            biggestTimeInterval = TimeIntervalUnit.Days
-        } else if (absoluteTime >= millisecondsHour) {
-            biggestTimeInterval = TimeIntervalUnit.Hours
-        } else if (absoluteTime >= millisecondsMinutes) {
-            biggestTimeInterval = TimeIntervalUnit.Minutes
+        let biggestTimeInterval: TimeUnit = null // It should never return as null
+        if (absoluteTime >= MILLISECONDS_YEAR) {
+            biggestTimeInterval = TimeUnit.Years
+        } else if (absoluteTime >= MILLISECONDS_MONTH) {
+            biggestTimeInterval = TimeUnit.Months
+        } else if (absoluteTime >= MILLISECONDS_DAY) {
+            biggestTimeInterval = TimeUnit.Days
+        } else if (absoluteTime >= MILLISECONDS_HOUR) {
+            biggestTimeInterval = TimeUnit.Hours
+        } else if (absoluteTime >= MILLISECONDS_MINUTE) {
+            biggestTimeInterval = TimeUnit.Minutes
         } else {
-            biggestTimeInterval = TimeIntervalUnit.Seconds
+            biggestTimeInterval = TimeUnit.Seconds
         }
 
         return biggestTimeInterval
@@ -100,35 +118,35 @@ export class TimeUtilityFunctions {
     /**
      * Gets the number of intervals of a delta time.
      * @param deltaTime Delta time in milliseconds.
-     * @param interval The {@link TimeIntervalUnit}.
+     * @param interval The {@link TimeUnit}.
      * @returns The number of intervals as an integer and with 1 decimal point.
      */
-    private countIntervals(deltaTime: number, interval: TimeIntervalUnit) {
+    private countIntervals(deltaTime: number, interval: TimeUnit) {
 
         let intervals: number = null
         switch (interval) {
-            case TimeIntervalUnit.Years:
-                intervals = deltaTime / millisecondsYear
+            case TimeUnit.Years:
+                intervals = deltaTime / MILLISECONDS_YEAR
                 break
         
-            case TimeIntervalUnit.Months:
-                intervals = deltaTime / millisecondsMonth
+            case TimeUnit.Months:
+                intervals = deltaTime / MILLISECONDS_MONTH
                 break
 
-            case TimeIntervalUnit.Days:
-                intervals = deltaTime / millisecondsDay
+            case TimeUnit.Days:
+                intervals = deltaTime / MILLISECONDS_DAY
                 break
 
-            case TimeIntervalUnit.Hours:
-                intervals = deltaTime / millisecondsHour
+            case TimeUnit.Hours:
+                intervals = deltaTime / MILLISECONDS_HOUR
                 break
 
-            case TimeIntervalUnit.Minutes:
-                intervals = deltaTime / millisecondsMinutes
+            case TimeUnit.Minutes:
+                intervals = deltaTime / MILLISECONDS_MINUTE
                 break
 
-            case TimeIntervalUnit.Seconds:
-                intervals = deltaTime / millisecondsSeconds
+            case TimeUnit.Seconds:
+                intervals = deltaTime / MILLISECONDS_SECOND
                 break
 
             default:
@@ -139,6 +157,18 @@ export class TimeUtilityFunctions {
         const intervalsRounded = Math.round(intervals * 10) / 10
         const intervalsInt = Math.floor(intervals)
         return { intervalsRounded, intervalsInt }
+    }
+
+
+
+    /**
+     * 
+     * Bytes
+     * 
+     */
+
+    private countBytes() {
+
     }
 
 }

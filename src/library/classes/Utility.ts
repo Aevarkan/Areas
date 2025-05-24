@@ -5,11 +5,11 @@
  * Author: Aevarkan
  */
 
-import { Block, BlockComponent, BlockComponentTypes, DimensionLocation, RawMessage } from "@minecraft/server";
+import { Block, BlockComponentTypes, DimensionLocation, RawMessage } from "@minecraft/server";
 import { BlockEventRecord } from "library/definitions/record";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { MinecraftBlockTypes, MinecraftDimensionTypes } from "@minecraft/vanilla-data";
-import { TimeUtilityFunctions } from "./TimeUtility";
+import { UnitConverter } from "./UnitConverter";
 import { MessageParser } from "./MessageParser";
 import { BASE64 } from "constants";
 
@@ -54,11 +54,11 @@ const reverseAreasDimensionMap = Object.fromEntries(
 
 class UtilityFunctions {
     
-    Time: TimeUtilityFunctions
+    Units: UnitConverter
     RawText: MessageParser
 
     constructor() {
-        this.Time = new TimeUtilityFunctions()
+        this.Units = new UnitConverter()
         this.RawText = new MessageParser()
     }
 
