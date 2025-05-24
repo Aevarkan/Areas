@@ -43,9 +43,9 @@ const blocksWithNBT = [
 ] as string[]
 
 const areasDimensionMap: Record<MinecraftDimensionTypes, string> = {
-    [MinecraftDimensionTypes.Overworld]: "1",
-    [MinecraftDimensionTypes.Nether]: "2",
-    [MinecraftDimensionTypes.TheEnd]: "3"
+    [MinecraftDimensionTypes.Overworld]: "o",
+    [MinecraftDimensionTypes.Nether]: "n",
+    [MinecraftDimensionTypes.TheEnd]: "e"
 }
 
 const reverseAreasDimensionMap = Object.fromEntries(

@@ -89,21 +89,21 @@ export class BlockDatabase {
         const blockDimension = Utility.compressDimension(blockLocation.dimension.id)
 
         if (
-            BLOCK_EVENT_PREFIX.includes(".") ||
-            base64Time.toString().includes(".") ||
-            blockX.toString().includes(".") ||
-            blockY.toString().includes(".") ||
-            blockZ.toString().includes(".") ||
-            blockDimension.toString().includes(".")
+            BLOCK_EVENT_PREFIX.includes(",") ||
+            base64Time.toString().includes(",") ||
+            blockX.toString().includes(",") ||
+            blockY.toString().includes(",") ||
+            blockZ.toString().includes(",") ||
+            blockDimension.toString().includes(",")
         ) {
-            system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer. Full stop found."))
-            throw new DatabaseInvalidCharacterError('Invalid character "." found in key.')
+            system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer."))
+            throw new DatabaseInvalidCharacterError('Invalid character "," found in key.')
         }
 
         // console.log("Compressed " + base64Time + " original: " + time )
 
         // Must all be strings
-        const key = `${BLOCK_EVENT_PREFIX}.${base64Time}.${blockX}.${blockY}.${blockZ}.${blockDimension}`
+        const key = `${BLOCK_EVENT_PREFIX},${base64Time},${blockX},${blockY},${blockZ},${blockDimension}`
         return key
     }
 
@@ -152,7 +152,7 @@ export class BlockDatabase {
             isRolledBackString.includes(",") ||
             sourceEntityId.includes(",")
         ) {
-            system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer. Comma found."))
+            system.run(() => world.sendMessage("Areas: Something has gone very wrong with the database, please notify the developer."))
             throw new DatabaseInvalidCharacterError('Invalid character "," found in value.')
         }
 
@@ -499,7 +499,7 @@ export class BlockDatabase {
      * @param key The key.
      */
     private unserialiseBlockRecordKey(key: string): DatabaseKeyRecord {
-        const parts = key.split(".")
+        const parts = key.split(",")
 
         // parts[0] is the prefix
         const time = Utility.uncompressNumber(parts[1])

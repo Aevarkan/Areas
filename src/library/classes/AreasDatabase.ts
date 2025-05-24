@@ -17,16 +17,17 @@ export class AreasDatabase {
 
     /**
      * The entity event database.
-     * {@link EntityDatabase}
+     * @see {@link EntityDatabase}
      */
     Entity: EntityDatabase
     /**
      * The block event database.
-     * {@link BlockDatabase}
+     * @see {@link BlockDatabase}
      */
     Block: BlockDatabase
     /**
      * The player name database.
+     * @see {@link PlayerNameDatabase}
      */
     Names: PlayerNameDatabase
 
