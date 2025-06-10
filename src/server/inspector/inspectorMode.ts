@@ -87,3 +87,12 @@ world.beforeEvents.playerBreakBlock.subscribe(event => {
     // The inspect message includes prettier formatting
     session.sendInspectMessage(messages, DatabaseQueryTypes.SingleLocationLog, messageInfo)
 })
+
+// No interactions in inspector mode
+world.beforeEvents.playerInteractWithBlock.subscribe(({player, cancel}) => {
+    const session = Areas.getPlayerSession(player)
+
+    if (!(session.inspectorEnabled)) return
+
+    cancel = true
+})

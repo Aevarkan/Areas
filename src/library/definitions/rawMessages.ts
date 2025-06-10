@@ -10,7 +10,7 @@ import { RawMessage } from "@minecraft/server"
 /**
  * Message information for parsing rawtext.
  * @remarks Properties must be a string or RawMessage.
- * @remarks RawMessages must be filled.
+ * @remarks This object must be created according to its use.
  */
 export interface MessageInfo {
     x?: string,
