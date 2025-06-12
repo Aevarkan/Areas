@@ -1,5 +1,3 @@
-import { world, system, ItemStack, Player, Entity, Dimension, StructureSaveMode, EntityComponentTypes, Vector3, Container, VanillaEntityIdentifier } from '@minecraft/server';
-
 // About the project
 
 // QIDB - QUICK ITEM DATABASE
@@ -15,6 +13,8 @@ import { world, system, ItemStack, Player, Entity, Dimension, StructureSaveMode,
 // Typescript private keyword is used instead of hash notation
 // Only one error is thrown for an invalid namespace. This is thrown during the constructor.
 // The database only returns ItemStack arrays instead of single ItemStack instances
+
+import { world, system, ItemStack, Entity, Dimension, StructureSaveMode, EntityComponentTypes, Vector3, Container } from '@minecraft/server';
 
 function date() {
     const date = new Date(Date.now())
