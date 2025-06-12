@@ -125,7 +125,7 @@ export class ItemDatabase {
     /**
      * The dimension that the storage entities will be spawned in.
      */
-    private readonly dimension: Dimension
+    private dimension: Dimension
 
     /**
      * Creates a new QIDB. Can be run during early execution.
@@ -146,11 +146,12 @@ export class ItemDatabase {
         this.queuedKeys = []
         this.queuedValues = []
         this.quickAccess = new Map()
-        this.dimension = world.getDimension("minecraft:overworld")
+        this.dimension = null // We need to assign the dimension later due to early execution
+        // this.dimension = world.getDimension("minecraft:overworld")
 
 
         // Check the namespace, if its bad, then we stop immediately
-        if (ItemDatabase.VALID_NAMESPACE.test(this.settings.namespace)) {
+        if (!(ItemDatabase.VALID_NAMESPACE.test(this.settings.namespace))) {
             logAction(`${namespace} isn't a valid namespace. accepted char: A-Z a-z 0-9 _ §r${date()}`, LogTypes.error)
             throw new Error(`Invalid namespace: ${namespace}`)
         }
@@ -159,10 +160,10 @@ export class ItemDatabase {
         this.logs = logSettings
 
         function startLog() {
-            logAction(`Initialized successfully.§r namespace: ${this.settings.namespace} §r${date()}`, LogTypes.log)
+            logAction(`Initialized successfully.§r namespace: ${namespace} §r${date()}`, LogTypes.log)
 
             if (saveRate > 1) {
-                logAction(`using a saveRate bigger than 1 can cause slower game ticks and extreme lag while saving 1024 size keys. at <${this.settings.namespace}> §r${date()}`, LogTypes.warn)
+                logAction(`using a saveRate bigger than 1 can cause slower game ticks and extreme lag while saving 1024 size keys. at <${namespace}> §r${date()}`, LogTypes.warn)
                 // player.isOp doesn't appear to be a thing
                 // world.getPlayers().forEach(player => {
                 //     if (player.isOp) {
@@ -177,6 +178,8 @@ export class ItemDatabase {
 
         // 2.0 requires this due to early execution
         system.run(() => {
+            this.dimension = world.getDimension("minecraft:overworld")
+
             let sl = world.scoreboard.getObjective(ItemDatabase.SCOREBOARD_ID)
             const player = world.getPlayers()[0]
             if (player) {
@@ -240,7 +243,8 @@ export class ItemDatabase {
                     return
                 } else return
             }, 1)
-            function log() {
+            // Arrow function to preserve `this`
+            const log = () => {
                 const abc = (-(this.queuedKeys.length - lastam) / 6).toFixed(0) || '//'
                 this.logs.save == true && logAction(`Saving, Dont close the world.\n§r[Stats]-§eRemaining: ${this.queuedKeys.length} keys | speed: ${abc} keys/s §r${date()}`, LogTypes.log)
                 lastam = this.queuedKeys.length
