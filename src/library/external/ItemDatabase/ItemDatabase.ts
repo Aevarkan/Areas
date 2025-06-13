@@ -29,20 +29,23 @@ function date() {
  * @param showStackTrace Whether to show the stack trace after the error.
  */
 function logAction(message: any, logType: LogTypes, showStackTrace = false) {
-    const fullMessage = "§cQIDB > " + message
+    let prefixedMessage = "QIDB > " + message
 
     switch (logType) {
         case LogTypes.warn:
-            console.warn(fullMessage)
+            prefixedMessage = "§6" + prefixedMessage
+            console.warn(prefixedMessage)
             break
 
         case LogTypes.error:
-            console.error(fullMessage)
+            prefixedMessage = "§c" + prefixedMessage
+            console.error(prefixedMessage)
             break
 
         case LogTypes.log:
         default:
-            console.log(fullMessage)
+            prefixedMessage = "§a" + prefixedMessage
+            console.log(prefixedMessage)
             break
     }
 
@@ -74,15 +77,15 @@ export interface ItemDatabaseLogSettings {
 
 const defaultLogs: ItemDatabaseLogSettings = {
     startUp: true,
-    save: true,
-    load: true,
-    set: true,
-    get: true,
-    has: true,
-    delete: true,
-    clear: true,
-    values: true,
-    keys: true,
+    save: false,
+    load: false,
+    set: false,
+    get: false,
+    has: false,
+    delete: false,
+    clear: false,
+    values: false,
+    keys: false,
 }
 
 export class ItemDatabase {
@@ -159,11 +162,12 @@ export class ItemDatabase {
         // Apply the log settings
         this.logs = logSettings
 
-        function startLog() {
-            logAction(`Initialized successfully.§r namespace: ${namespace} §r${date()}`, LogTypes.log)
+        // Arrow function to preserve `this` 
+        const startLog = () => {
+            logAction(`Initialized successfully.§r namespace: ${this.settings.namespace} §r${date()}`, LogTypes.log)
 
             if (saveRate > 1) {
-                logAction(`using a saveRate bigger than 1 can cause slower game ticks and extreme lag while saving 1024 size keys. at <${namespace}> §r${date()}`, LogTypes.warn)
+                logAction(`using a saveRate bigger than 1 can cause slower game ticks and extreme lag while saving 1024 size keys. at <${this.settings.namespace}> §r${date()}`, LogTypes.warn)
                 // player.isOp doesn't appear to be a thing
                 // world.getPlayers().forEach(player => {
                 //     if (player.isOp) {
