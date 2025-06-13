@@ -7,7 +7,7 @@
 
 import { CommandPermissionLevel, CustomCommand, CustomCommandOrigin, CustomCommandResult, CustomCommandStatus, Player, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
-import { Utility } from "library/classes/Utility";
+import { Utility } from "library/classes/utility/Utility";
 
 const checkStorageCustomCommand: CustomCommand = {
     description: "Shows the storage usage of Areas.",

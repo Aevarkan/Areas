@@ -10,7 +10,7 @@ import { BlockSnapshot } from "./BlockSnapshot";
 import { DatabaseEntityTypes, BlockInteractionTypes, DatabaseValue } from "library/definitions/areasWorld";
 import { BlockRecordQueryOptions } from "library/definitions/query";
 import { DatabaseKeyRecord } from "library/definitions/key";
-import { Utility } from "./Utility";
+import { Utility } from "./utility/Utility";
 import { BlockEventRecord, BlockEventRecordValue } from "library/definitions/record";
 import { DatabaseInvalidCharacterError } from "./Errors";
 import config from "config";

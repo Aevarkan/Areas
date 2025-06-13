@@ -7,7 +7,7 @@
 
 import { Block, BlockComponentTypes, DimensionLocation, EntityComponentTypes, ItemStack, Player, RawMessage } from "@minecraft/server";
 import { BlockEventRecord } from "library/definitions/record";
-import { BlockSnapshot } from "./BlockSnapshot";
+import { BlockSnapshot } from "../BlockSnapshot";
 import { MinecraftBlockTypes, MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import { UnitConverter } from "./UnitConverter";
 import { MessageParser } from "./MessageParser";
@@ -62,7 +62,7 @@ export class Utility {
      */
     public static readonly Units = UnitConverter
     /**
-     * Methods for handling {@link RawText}.
+     * Methods for handling {@link RawMessage}s.
      */
     public static readonly RawText = MessageParser
 

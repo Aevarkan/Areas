@@ -10,13 +10,13 @@
 import { BlockEventRecord } from "library/definitions/record";
 import { Utility } from "./Utility";
 import { StorageInfo, StorageUnit, TimeInfo, TimeUnit } from "./UnitConverter";
-import { RawMessageParseError } from "./Errors";
+import { RawMessageParseError } from "../Errors";
 import { DimensionLocation, RawMessage } from "@minecraft/server";
 import { BlockInteractionTypes, DatabaseEntityTypes, DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 import config from "config";
 import { MessageInfo } from "library/definitions/rawMessages";
-import { Areas } from "./AreasSystem";
+import { Areas } from "../AreasSystem";
 
 // This is just so the colours change each line
 const nonRolledBackFormats = config.recordFormatCode.length

@@ -6,7 +6,7 @@
  */
 
 import { BYTES_GIGABYTE, BYTES_KILOBYTE, BYTES_MEGABYTE, BYTES_TERABYTE, MILLISECONDS_DAY, MILLISECONDS_HOUR, MILLISECONDS_MINUTE, MILLISECONDS_MONTH, MILLISECONDS_SECOND, MILLISECONDS_YEAR } from "constants"
-import { CalculationError } from "./Errors"
+import { CalculationError } from "../Errors"
 
 /**
  * Human readable time intervals.

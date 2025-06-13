@@ -8,7 +8,7 @@
 import { DimensionLocation, system, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
 import { BlockSnapshot } from "library/classes/BlockSnapshot";
-import { Utility } from "library/classes/Utility";
+import { Utility } from "library/classes/utility/Utility";
 import { BlockInteractionTypes } from "library/definitions/areasWorld";
 
 // We cannot use after events, this is because the block is already destroyed.

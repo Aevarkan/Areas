@@ -9,7 +9,7 @@ import { DimensionLocation, Player, RawMessage } from "@minecraft/server";
 import config from "config";
 import { DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { BlockRecordQueryOptions } from "library/definitions/query";
-import { Utility } from "./Utility";
+import { Utility } from "./utility/Utility";
 import { MessageInfo } from "library/definitions/rawMessages";
 
 const IS_INSPECTOR_ENABLED_DP = "inspector"

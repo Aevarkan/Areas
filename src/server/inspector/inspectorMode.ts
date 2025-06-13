@@ -8,7 +8,7 @@
 import { DimensionLocation, system, world } from "@minecraft/server";
 import { Areas } from "library/classes/AreasSystem";
 import { PlayerSession } from "library/classes/PlayerSession";
-import { Utility } from "library/classes/Utility";
+import { Utility } from "library/classes/utility/Utility";
 import { DatabaseQueryTypes } from "library/definitions/areasWorld";
 import { MessageInfo } from "library/definitions/rawMessages";
 
