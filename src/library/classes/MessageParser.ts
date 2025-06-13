@@ -50,7 +50,7 @@ export class MessageParser {
      * @param prefixIndex The prefix to use, defined in `config`.
      * @returns A raw message with the prefix added.
      */
-    public addPrefix(message: RawMessage, prefixIndex: number) {
+    public static addPrefix(message: RawMessage, prefixIndex: number) {
         const newMessage: RawMessage = {
             translate: "areas.combine2",
             with: { rawtext: [
@@ -68,7 +68,7 @@ export class MessageParser {
      * @returns A combined message.
      * @remarks The first message will come first.
      */
-    private combineMessage(message1: RawMessage, message2: RawMessage) {
+    private static combineMessage(message1: RawMessage, message2: RawMessage) {
 
         const newMessage: RawMessage = {
             translate: "areas.combine2",
@@ -80,7 +80,7 @@ export class MessageParser {
         return newMessage
     }
 
-    public parseMessageHeader(logType: DatabaseQueryTypes, messageInformation: MessageInfo) {
+    public static parseMessageHeader(logType: DatabaseQueryTypes, messageInformation: MessageInfo) {
         
         // Use the message body type we want
         let messageHeaderBody: RawMessage
@@ -129,7 +129,7 @@ export class MessageParser {
      * @returns A rawmessage.
      * @remarks Example: 5 seconds ago, Herobrine placed minecraft:tnt at 100 32 100 in nether.
      */
-    public parseBlockEventRecord(record: BlockEventRecord, currentTime: number, includeLocation: boolean): RawMessage {
+    public static parseBlockEventRecord(record: BlockEventRecord, currentTime: number, includeLocation: boolean): RawMessage {
         const timeDiference = Utility.Units.timeDifference(currentTime, record.time)
         
         // Parse the time into human readable string
@@ -210,7 +210,7 @@ export class MessageParser {
      * @param record The block event record array.
      * @returns A rawmessage array.
      */
-    public parseBlockEventRecords(records: BlockEventRecord[], currentTime: number, includeLocation: boolean): RawMessage[] {
+    public static parseBlockEventRecords(records: BlockEventRecord[], currentTime: number, includeLocation: boolean): RawMessage[] {
         
         const parsedRecords = [] as RawMessage[]
         records.forEach(record => {
@@ -226,7 +226,7 @@ export class MessageParser {
      * @param time The time unit.
      * @returns A raw message string.
      */
-    private parseTime(time: TimeInfo): RawMessage {
+    private static parseTime(time: TimeInfo): RawMessage {
         const intervalUnit = time.biggestInterval
         const intervals = time.biggestIntervals.toString()
 
@@ -268,7 +268,7 @@ export class MessageParser {
      * @param storage The storage info object.
      * @returns The parsed rawmessage.
      */
-    parseStorage(storage: StorageInfo): RawMessage {
+    public static parseStorage(storage: StorageInfo): RawMessage {
         const { largestUnit } = storage
         const largestUnitAmount = storage.largestUnitAmount.toString()
 
@@ -307,7 +307,7 @@ export class MessageParser {
      * @param entityTypeId The optional type id of the entity that caused the record.
      * @param playerId The optional id of the player that caused the record.
      */
-    private parseEntityCause(causeEntityType: DatabaseEntityTypes, entityTypeId?: string, playerId?: number): RawMessage {
+    private static parseEntityCause(causeEntityType: DatabaseEntityTypes, entityTypeId?: string, playerId?: number): RawMessage {
         // Entity names are stored in the vanilla resource pack as example below:
         // entity.armadillo.name
 
@@ -343,7 +343,7 @@ export class MessageParser {
      * @param location The dimension location.
      * @returns A rawmessage string.
      */
-    private parseLocation(location: DimensionLocation): RawMessage {
+    private static parseLocation(location: DimensionLocation): RawMessage {
         const xString = location.x.toString()
         const yString = location.y.toString()
         const zString = location.z.toString()
@@ -389,7 +389,7 @@ export class MessageParser {
      * @param blockTypeId The block's type id.
      * @returns The raw message.
      */
-    private parseBlock(blockTypeId: string) {
+    private static parseBlock(blockTypeId: string) {
         // Example: tile.sapling.spruce.name=Spruce Sapling
         const blockTypeIdNoNamespace = blockTypeId.split(":")[1]
 
@@ -402,7 +402,7 @@ export class MessageParser {
      * @param interaction The type of interaction. ({@link BlockInteractionTypes})
      * @returns A raw message string.
      */
-    private parseBlockInteraction(interaction: BlockInteractionTypes) {
+    private static parseBlockInteraction(interaction: BlockInteractionTypes) {
         
         let interactionMessage: RawMessage
         switch (interaction) {

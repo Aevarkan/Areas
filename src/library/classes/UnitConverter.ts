@@ -74,10 +74,10 @@ export class UnitConverter {
      * @returns a {@link TimeUnit} object.
      * @remarks This will output the absolute difference, disregarding sign.
      */
-    public timeDifference(time1: number, time2: number): TimeInfo {
+    public static timeDifference(time1: number, time2: number): TimeInfo {
         const deltaTime = Math.abs(time1 - time2)
-        const biggestInterval = this.biggestTimeInterval(deltaTime)
-        const intervals = this.countIntervals(deltaTime, biggestInterval)
+        const biggestInterval = UnitConverter.biggestTimeInterval(deltaTime)
+        const intervals = UnitConverter.countIntervals(deltaTime, biggestInterval)
 
         const difference: TimeInfo = {
             biggestInterval: biggestInterval,
@@ -92,7 +92,7 @@ export class UnitConverter {
      * @param time The delta time.
      * @returns A time interval unit: {@link SignificantTimeFigures}
      */
-    private biggestTimeInterval(time: number): TimeUnit {
+    private static biggestTimeInterval(time: number): TimeUnit {
 
         const absoluteTime = Math.abs(time)
         // We divide by the time it takes for each interval.
@@ -122,7 +122,7 @@ export class UnitConverter {
      * @param interval The {@link TimeUnit}.
      * @returns The number of intervals as an integer and with 1 decimal point.
      */
-    private countIntervals(deltaTime: number, interval: TimeUnit) {
+    private static countIntervals(deltaTime: number, interval: TimeUnit) {
 
         let intervals: number = null
         switch (interval) {
@@ -173,7 +173,7 @@ export class UnitConverter {
      * @param bytes The number of bytes.
      * @returns A {@link StorageInfo} object.
      */
-    public calculateStorage(bytes: number): StorageInfo {
+    public static calculateStorage(bytes: number): StorageInfo {
 
         // Don't know why you'd put a negative number in, but it'd still work
         bytes = Math.abs(bytes)

@@ -5,7 +5,7 @@
  * Author: Aevarkan
  */
 
-import { Block, BlockComponentTypes, DimensionLocation, RawMessage } from "@minecraft/server";
+import { Block, BlockComponentTypes, DimensionLocation, EntityComponentTypes, ItemStack, Player, RawMessage } from "@minecraft/server";
 import { BlockEventRecord } from "library/definitions/record";
 import { BlockSnapshot } from "./BlockSnapshot";
 import { MinecraftBlockTypes, MinecraftDimensionTypes } from "@minecraft/vanilla-data";
@@ -52,15 +52,19 @@ const reverseAreasDimensionMap = Object.fromEntries(
     Object.entries(areasDimensionMap).map(([key, value]) => [value, key])
 )
 
-class UtilityFunctions {
+/**
+ * A bunch of utility functions.
+ */
+export class Utility {
     
-    Units: UnitConverter
-    RawText: MessageParser
-
-    constructor() {
-        this.Units = new UnitConverter()
-        this.RawText = new MessageParser()
-    }
+    /**
+     * Methods for handling units.
+     */
+    public static readonly Units = UnitConverter
+    /**
+     * Methods for handling {@link RawText}.
+     */
+    public static readonly RawText = MessageParser
 
     /**
      * Compresses dimensions for smaller storage.
@@ -68,7 +72,7 @@ class UtilityFunctions {
      * @returns The compressed dimension code.
      * @remarks Modded dimensions will have to be added manually, they're not compressed by default.
      */
-    public compressDimension(dimensionId: MinecraftDimensionTypes | string): string {
+    public static compressDimension(dimensionId: MinecraftDimensionTypes | string): string {
         return areasDimensionMap[dimensionId] ?? dimensionId
     }
 
@@ -78,14 +82,14 @@ class UtilityFunctions {
      * @returns The original dimension id.
      * @remarks Modded dimensions will have to be added manually, they're not compressed by default.
      */
-    public uncompressDimension(dimensionId: string): string {
+    public static uncompressDimension(dimensionId: string): string {
         return reverseAreasDimensionMap[dimensionId] ?? dimensionId
     }
 
     /**
      * Checks if a dimension location matches another one.
      */
-    public isMatchingLocation(location1: DimensionLocation, location2: DimensionLocation) {
+    public static isMatchingLocation(location1: DimensionLocation, location2: DimensionLocation) {
         let isMatching = false
 
         if (
@@ -107,7 +111,7 @@ class UtilityFunctions {
      * @remarks Type ids are typically stored as namespace:id, entity ids are purely numbers.
      * @remarks Areas stores entities with type ids and players with numeric ids.
      */
-    public isId(string: string): boolean {
+    public static isId(string: string): boolean {
         const regex = /^-?\d+$/
         return regex.test(string)
     }
@@ -117,7 +121,7 @@ class UtilityFunctions {
      * @param block The block to check.
      * @returns true if the block has NBT data, otherwise false
      */
-    public hasNBT(block: Block) {
+    public static hasNBT(block: Block) {
         const blockTypeId = block.typeId
         let hasNBT = false
 
@@ -144,7 +148,7 @@ class UtilityFunctions {
      * @param record The block event record.
      * @param includeLocation Whether the string should contain the block location.
      */
-    public parseBlockRecord(record: BlockEventRecord, includeLocation: boolean) {
+    public static parseBlockRecord(record: BlockEventRecord, includeLocation: boolean) {
         // Records should be something like
         // At time, player broke block:type
         const date = new Date(record.time)
@@ -163,7 +167,7 @@ class UtilityFunctions {
      * @param block The block to check
      * @return `true` if the block is a fluid, otherwise `false`.
      */
-    public isFluidBlock(block: BlockSnapshot) {
+    public static isFluidBlock(block: BlockSnapshot) {
         const typeId = block.typeId
         
         let isFluid = false
@@ -186,7 +190,7 @@ class UtilityFunctions {
      * @param number The number to compress.
      * @returns The compressed number as a string.
      */
-    public compressNumber(number: number): string {
+    public static compressNumber(number: number): string {
         let compressedNumber: string = ""
 
         const isNegativeNumber = number < 0 // This caused so many problems before I found out
@@ -210,7 +214,7 @@ class UtilityFunctions {
      * @param stringNumber The compressed number as a string.
      * @returns The uncompressed number.
      */
-    public uncompressNumber(stringNumber: string): number {
+    public static uncompressNumber(stringNumber: string): number {
         let number = 0
         const isNegative = stringNumber.startsWith("-");
         const base64Digits = isNegative ? stringNumber.slice(1) : stringNumber
@@ -222,26 +226,15 @@ class UtilityFunctions {
         return isNegative ? -number : number
     }
 
-// function toBase62(num) {
-//   let encoded = '';
-//   while (num > 0) {
-//     encoded = base62Chars[num % 62] + encoded;
-//     num = Math.floor(num / 62);
-//   }
-//   return encoded || base62Chars[0];
-// }
-
-// function fromBase62(encoded) {
-//   let num = 0;
-//   for (let i = 0; i < encoded.length; i++) {
-//     num = num * 62 + base62Chars.indexOf(encoded[i]);
-//   }
-//   return num;
-// }
+    /**
+     * Gets the item the player is currently holding.
+     * @param player The player.
+     * @returns A copy of the `ItemStack` the player is currently holding. Returns `undefined` if the player is not holding anything.
+     */
+    public static getHeldItem(player: Player): ItemStack | undefined {
+        const container = player.getComponent(EntityComponentTypes.Inventory).container
+        const itemStack = container.getItem(player.selectedSlotIndex)
+        return itemStack
+    }
 
 }
-
-/**
- * A bunch of utility functions.
- */
-export const Utility = new UtilityFunctions()
